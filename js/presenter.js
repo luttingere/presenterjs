@@ -84,8 +84,6 @@ $(document).ready(function () {
         //var stepElement = $('.'+step.id);
         var stepElement = $('body').find('.' + step.id);
         var presenter = getPresenterInstance(step);
-        console.log("cuando lo creamos");
-        console.log(presenter);
         var topAndLeft = findPosition(step.position, stepElement, presenter);
         presenter.off("click");
         presenter.on("click", function () {
@@ -109,11 +107,8 @@ $(document).ready(function () {
     function onStepStart(step, stepElement, presenter) {
         stepElement.addClass(step.drawOnTarget);
         presenter.addClass(step.drawOnSelf);
-        console.log(step.indicatorPosition);
-        console.log("cuando lo usamos: ");
-        console.log(presenter.find('div#dialogue-indicator'));
-        $('#dialogue-indicator').attr('class',step.indicatorPosition)
         transform(presenter, step);
+        presenter.find('#dialogue-indicator').addClass(step.indicatorPosition);
     }
 
     /**
@@ -149,7 +144,7 @@ $(document).ready(function () {
         }
         presenter.find('#presenter_title').html(step.title);
         presenter.find('#presenter_message').html(step.text);
-
+        presenter.addClass("show");
     }
 
     /**
