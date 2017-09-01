@@ -3,8 +3,6 @@
  */
 $(document).ready(function() {
 
-
-
     var steps = {
         step1: {
             id: "step1",
@@ -40,6 +38,10 @@ $(document).ready(function() {
         }
     };
 
+    /**
+     *
+     * @param step
+     */
     function show(step) {
         //var stepElement = $('.'+step.id);
         var stepElement = $('#presentation').find('.' + step.id);
@@ -58,12 +60,24 @@ $(document).ready(function() {
     }
 
 
+    /**
+     *
+     * @param step
+     * @param stepElement
+     * @param presenter
+     */
     function onStepStart(step, stepElement, presenter) {
         stepElement.addClass(step.drawOnTarget);
         presenter.addClass(step.drawOnSelf);
         transform(presenter, step);
     }
 
+    /**
+     *
+     * @param step
+     * @param stepElement
+     * @param presenter
+     */
     function onStepEnd(step, stepElement, presenter) {
         stepElement.removeClass(step.drawOnTarget);
         presenter.removeClass(step.drawOnSelf);
@@ -72,6 +86,12 @@ $(document).ready(function() {
         }
     }
 
+    /**
+     *
+     *
+     * @param presenter
+     * @param step
+     */
     function transform(presenter, step) {
         if(step.template != null && step.template != ""){
             $(step.template).css({
@@ -80,6 +100,13 @@ $(document).ready(function() {
         }
     }
 
+    /**
+     *
+     * @param position
+     * @param element
+     * @param presenter
+     * @returns {{top: string, left: string}}
+     */
     function findPosition(position, element, presenter) {
         var topAndLeft = {
             "top": "",
@@ -88,18 +115,22 @@ $(document).ready(function() {
         var fixedPoints = 1;
         var finalHeight = presenter.height() - element.height();
         var finalWidth = presenter.width() - element.width();
+        var padding = presenter.css('padding');
+        padding = Number(padding.replace('px','')) * 2;
+        //var padding = 0;
+        console.log(padding);
         switch (position) {
             case "TOP_LEFT":
-                topAndLeft.top = -((element.height()+finalHeight) + fixedPoints);
-                topAndLeft.left = -((element.width() + finalWidth) + fixedPoints);
+                topAndLeft.top = -((element.height()+finalHeight+padding) + fixedPoints);
+                topAndLeft.left = -((element.width() + finalWidth+padding) + fixedPoints);
                 break;
             case "TOP_RIGHT":
-                topAndLeft.top = -((element.height() + finalHeight) + fixedPoints);
+                topAndLeft.top = -((element.height() + finalHeight + padding) + fixedPoints);
                 topAndLeft.left = (element.width() + fixedPoints);
                 break;
             case "BOTTOM_LEFT":
                 topAndLeft.top = (element.height() + fixedPoints);
-                topAndLeft.left = -((element.width() + finalWidth) + fixedPoints);
+                topAndLeft.left = -((element.width() + finalWidth + padding) + fixedPoints);
                 break;
             case "BOTTOM_RIGHT":
                 topAndLeft.top = (element.height() + fixedPoints);
