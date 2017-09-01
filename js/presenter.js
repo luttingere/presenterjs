@@ -4,15 +4,22 @@
 $(document).ready(function () {
 
     var steps = {
+        prepare: {
+            template: "<div id=\"guide-bg\"><div id=\"guide-message\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div>",
+            productName: "The Presenter",
+            message:"cualquier vaina =D"
+        },
         step1: {
             id: "step1",
             title: "Cuadrito 1",
             text: "Este es el cuadrado 1 alineado en la esquina superior izquierda, el no hace nada solo esta alli para enseñarte a usar esta mierda :)",
             position: "BOTTOM_RIGHT",
+            button: "GOT IT!",
             indicatorPosition: "left-top",
             drawOnTarget: "pintar",
             drawOnSelf: "",
             template: "",
+            delay:300,
             nextStep: "step2"
         },
         step2: {
@@ -31,6 +38,7 @@ $(document).ready(function () {
             title: "Cuadradito 3",
             text: "Este es el cuadrado 3 alineado en la esquina inferior izquierda no hace un coño tampoco",
             position: "TOP_RIGHT",
+            button: "GOT IT!",
             indicatorPosition: "left-bottom",
             drawOnTarget: "pintar",
             drawOnSelf: "",
@@ -42,12 +50,14 @@ $(document).ready(function () {
             title: "Cuadradito 4",
             text: "Este es el cuadrado 4 alineado en la esquina inferior derecha es el ultimo, aqui termina la presentacion",
             position: "TOP_LEFT",
+            button: "",
             indicatorPosition: "right-bottom",
             drawOnTarget: "pintar",
             drawOnSelf: "",
             template: "",
             nextStep: "step1"
-        }
+        },
+        end: {}
     };
 
     /**
@@ -111,8 +121,15 @@ $(document).ready(function () {
         if (step.template != null && step.template != "") {
             $(step.template).css({}).appendTo(presenter);
         }
+        if (!step.button) {
+            presenter.find('#dialogue-btn').addClass("hide");
+        } else {
+            presenter.find('#dialogue-btn').removeClass("hide");
+            presenter.find('#dialogue-btn').html(step.button);
+        }
         presenter.find('#presenter_title').html(step.title);
         presenter.find('#presenter_message').html(step.text);
+
     }
 
     /**
@@ -156,6 +173,33 @@ $(document).ready(function () {
         return topAndLeft;
     }
 
-    show(steps['step1']);
+    function runShowCase(steps) {
+        var template = steps['prepare'].template;
+        $('body').append(template)
+        $('body').css({
+            "overflow": "hidden",
+        });
+        setTimeout(function () {
 
+            $('body').find("#guide-bg").addClass("show");
+
+            setTimeout(function () {
+
+                $('body').find("#guide-message").addClass("show");
+                $('body').find("#guide-bg").find("#productName").html(steps['prepare'].productName);
+                $('body').find("#guide-bg").find("#message").html(steps['prepare'].message);
+
+                setTimeout(function () {
+
+                    show(steps['step1']);
+
+                }, steps['step1'].delay);
+
+
+            }, 300);
+
+        }, 3000);
+    }
+
+    runShowCase(steps);
 });
