@@ -1,0 +1,37 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js">
+    <link rel="stylesheet" type="text/css" href="css/presenter.less">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/presenter.js"></script>
+</head>
+<body>
+
+<div id="presentation" class="container">
+    <div id="step1" class="step1 arribaALaIzquierda"></div>
+    <div id="step2" class="step2 arribaALaDerecha"></div>
+    <div id="step3" class="step3 abajoALaIzquierda"></div>
+    <div id="step4" class="step4 abajoALaDerecha"></div>
+</div>
+
+
+<div id="guide-dialogue-box">
+    <div id="dialogue-indicator"></div>
+    <div class="dialogue-content">
+        <div class="dialogue-img">
+            <img src="https://image.flaticon.com/icons/svg/288/288082.svg">
+        </div>
+        <div class="dialogue-body">
+            <h4 class="dialogue-heading">Barra de navegación</h4>Aquí encontrarás las acciones de usuario de forma tal
+            que puedas iniciar sesión y cerrar, editar el perfil de usuario cuando desees...
+            <md-button ng-click="dialogueBtnCtrl()" id="dialogue-btn" class="md-raised md-primary" step-action>
+                Entendido
+            </md-button>
+        </div>
+    </div>
+</div>
+
+</body>
+<footer>
+</footer>
+</html>
