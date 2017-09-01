@@ -3,11 +3,18 @@
  */
 $(document).ready(function () {
 
+
+    var presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
+    var presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
+        "<div class=\"dialogue-content\"><div class=\"dialogue-img\"><img src=\"https://image.flaticon.com/icons/svg/288/288082.svg\">" +
+        "</div> <div class=\"dialogue-body\"><h4 id=\"presenter_title\" class=\"dialogue-heading\"></h4><p id=\"presenter_message\"></p></div> " +
+        "<button id=\"dialogue-btn\" class=\"btn waves-effect waves-light hide\" type=\"submit\" name=\"action\">Entendido</button></div>";
+
     var steps = {
         prepare: {
             template: "<div id=\"guide-bg\"><div id=\"guide-message\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div>",
             productName: "The Presenter",
-            message:"cualquier vaina =D"
+            message: "cualquier vaina =D"
         },
         step1: {
             id: "step1",
@@ -18,8 +25,8 @@ $(document).ready(function () {
             indicatorPosition: "left-top",
             drawOnTarget: "pintar",
             drawOnSelf: "",
-            template: "",
-            delay:300,
+            template: presenterDefaultBody,
+            delay: 300,
             nextStep: "step2"
         },
         step2: {
@@ -30,7 +37,7 @@ $(document).ready(function () {
             indicatorPosition: "right-top",
             drawOnTarget: "pintar",
             drawOnSelf: "",
-            template: "",
+            template: presenterDefaultBody,
             nextStep: "step3"
         },
         step3: {
@@ -42,7 +49,7 @@ $(document).ready(function () {
             indicatorPosition: "left-bottom",
             drawOnTarget: "pintar",
             drawOnSelf: "",
-            template: "",
+            template: presenterDefaultBody,
             nextStep: "step4"
         },
         step4: {
@@ -54,11 +61,20 @@ $(document).ready(function () {
             indicatorPosition: "right-bottom",
             drawOnTarget: "pintar",
             drawOnSelf: "",
-            template: "",
+            template: presenterDefaultBody,
             nextStep: "step1"
         },
         end: {}
     };
+
+    function getPresenterInstance(step) {
+        var presenter = $('#guide-dialogue-box');
+        if (presenter.html() == undefined) {
+            $(presenterDefaultTemplate).appendTo($('body'));
+            presenter = $('#guide-dialogue-box');
+        }
+        return presenter;
+    }
 
     /**
      *
@@ -66,8 +82,10 @@ $(document).ready(function () {
      */
     function show(step) {
         //var stepElement = $('.'+step.id);
-        var stepElement = $('#presentation').find('.' + step.id);
-        var presenter = $('#guide-dialogue-box');
+        var stepElement = $('body').find('.' + step.id);
+        var presenter = getPresenterInstance(step);
+        console.log("cuando lo creamos");
+        console.log(presenter);
         var topAndLeft = findPosition(step.position, stepElement, presenter);
         presenter.off("click");
         presenter.on("click", function () {
@@ -91,8 +109,10 @@ $(document).ready(function () {
     function onStepStart(step, stepElement, presenter) {
         stepElement.addClass(step.drawOnTarget);
         presenter.addClass(step.drawOnSelf);
-        presenter.find('#dialogue-indicator').addClass(step.indicatorPosition);
-        console.log(presenter.find('#dialogue-indicator'));
+        console.log(step.indicatorPosition);
+        console.log("cuando lo usamos: ");
+        console.log(presenter.find('div#dialogue-indicator'));
+        $('#dialogue-indicator').attr('class',step.indicatorPosition)
         transform(presenter, step);
     }
 
