@@ -153,15 +153,75 @@ img {
 }
 
 #dialogue-indicator {
-    position: absolute;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 0 solid transparent;
+
+  &.top-left {
     top: -9px;
-    right: 20px;
-    width: 0;
-    height: 0;
-    border: 0 solid transparent;
+    left: 20px;
     border-right-width: 10px;
     border-left-width: 10px;
     border-bottom: 10px solid lightgreen;
+  }
+
+  &.top-right {
+    top: -9px;
+    right: 20px;
+    border-right-width: 10px;
+    border-left-width: 10px;
+    border-bottom: 10px solid lightgreen;
+  }
+
+  &.bottom-left {
+    bottom: -9px;
+    left: 20px;
+    border-right-width: 10px;
+    border-left-width: 10px;
+    border-top: 10px solid lightgreen;
+  }
+
+  &.bottom-right {
+    bottom: -9px;
+    right: 20px;
+    border-right-width: 10px;
+    border-left-width: 10px;
+    border-top: 10px solid lightgreen;
+  }
+
+  &.left-top {
+    left: -9px;
+    top: 20px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+    border-right: 10px solid lightgreen;
+  }
+
+  &.left-bottom {
+    left: -9px;
+    bottom: 20px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+    border-right: 10px solid lightgreen;
+  }
+
+  &.right-top {
+    right: -9px;
+    top: 20px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+    border-left: 10px solid lightgreen;
+  }
+
+  &.right-bottom {
+    right: -9px;
+    bottom: 20px;
+    border-top-width: 10px;
+    border-bottom-width: 10px;
+    border-left: 10px solid lightgreen;
+  }
+
 }
 
 #dialogue-btn {
