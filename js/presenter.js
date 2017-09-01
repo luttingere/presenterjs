@@ -1,12 +1,13 @@
 /**
  * Created by Eduardo Luttinger on 01/09/2017.
  */
-$(document).ready(function() {
+$(document).ready(function () {
 
     var steps = {
         step1: {
             id: "step1",
             position: "BOTTOM_RIGHT",
+            indicatorPosition:"left-top",
             drawOnTarget: "pintar",
             drawOnSelf: "",
             template: "",
@@ -15,6 +16,7 @@ $(document).ready(function() {
         step2: {
             id: "step2",
             position: "BOTTOM_LEFT",
+            indicatorPosition:"right-top",
             drawOnTarget: "pintar",
             drawOnSelf: "",
             template: "",
@@ -23,6 +25,7 @@ $(document).ready(function() {
         step3: {
             id: "step3",
             position: "TOP_RIGHT",
+            indicatorPosition:"left-bottom",
             drawOnTarget: "pintar",
             drawOnSelf: "",
             template: "",
@@ -31,6 +34,7 @@ $(document).ready(function() {
         step4: {
             id: "step4",
             position: "TOP_LEFT",
+            indicatorPosition:"right-bottom",
             drawOnTarget: "pintar",
             drawOnSelf: "",
             template: "",
@@ -46,9 +50,9 @@ $(document).ready(function() {
         //var stepElement = $('.'+step.id);
         var stepElement = $('#presentation').find('.' + step.id);
         var presenter = $('#guide-dialogue-box');
-        var topAndLeft = findPosition(step.position, stepElement,presenter);
+        var topAndLeft = findPosition(step.position, stepElement, presenter);
         presenter.off("click");
-        presenter.on("click", function() {
+        presenter.on("click", function () {
             onStepEnd(step, stepElement, presenter)
             show(steps[step.nextStep]);
         }).css({
@@ -69,6 +73,8 @@ $(document).ready(function() {
     function onStepStart(step, stepElement, presenter) {
         stepElement.addClass(step.drawOnTarget);
         presenter.addClass(step.drawOnSelf);
+        presenter.find('#dialogue-indicator').addClass(step.indicatorPosition);
+        console.log(presenter.find('#dialogue-indicator'));
         transform(presenter, step);
     }
 
@@ -81,7 +87,8 @@ $(document).ready(function() {
     function onStepEnd(step, stepElement, presenter) {
         stepElement.removeClass(step.drawOnTarget);
         presenter.removeClass(step.drawOnSelf);
-        if(step.template != null && step.template != ""){
+        presenter.find('#dialogue-indicator').removeClass(step.indicatorPosition);
+        if (step.template != null && step.template != "") {
             presenter.empty();
         }
     }
@@ -93,10 +100,8 @@ $(document).ready(function() {
      * @param step
      */
     function transform(presenter, step) {
-        if(step.template != null && step.template != ""){
-            $(step.template).css({
-
-            }).appendTo(presenter);
+        if (step.template != null && step.template != "") {
+            $(step.template).css({}).appendTo(presenter);
         }
     }
 
@@ -112,29 +117,29 @@ $(document).ready(function() {
             "top": "",
             "left": ""
         }
+        var height = element.height();
+        var width = element.width();
         var fixedPoints = 1;
         var finalHeight = presenter.height() - element.height();
         var finalWidth = presenter.width() - element.width();
         var padding = presenter.css('padding');
-        padding = Number(padding.replace('px','')) * 2;
-        //var padding = 0;
-        console.log(padding);
+        padding = Number(padding.replace('px', '')) * 2;
         switch (position) {
             case "TOP_LEFT":
-                topAndLeft.top = -((element.height()+finalHeight+padding) + fixedPoints);
-                topAndLeft.left = -((element.width() + finalWidth+padding) + fixedPoints);
+                topAndLeft.top = -((height + finalHeight + padding) + fixedPoints);
+                topAndLeft.left = -((width + finalWidth + padding) + fixedPoints);
                 break;
             case "TOP_RIGHT":
-                topAndLeft.top = -((element.height() + finalHeight + padding) + fixedPoints);
-                topAndLeft.left = (element.width() + fixedPoints);
+                topAndLeft.top = -((height + finalHeight + padding) + fixedPoints);
+                topAndLeft.left = (width + fixedPoints);
                 break;
             case "BOTTOM_LEFT":
-                topAndLeft.top = (element.height() + fixedPoints);
-                topAndLeft.left = -((element.width() + finalWidth + padding) + fixedPoints);
+                topAndLeft.top = (height + fixedPoints);
+                topAndLeft.left = -((width + finalWidth + padding) + fixedPoints);
                 break;
             case "BOTTOM_RIGHT":
-                topAndLeft.top = (element.height() + fixedPoints);
-                topAndLeft.left = (element.width() + fixedPoints);
+                topAndLeft.top = (height + fixedPoints);
+                topAndLeft.left = (width + fixedPoints);
                 break;
         }
         return topAndLeft;
