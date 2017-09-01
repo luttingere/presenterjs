@@ -8,10 +8,12 @@
     <title>Presenter</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/less" href="css/presenter.less">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
     <script src="js/presenter.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="js/presenter.js"></script>
 </head>
 <body>
@@ -32,9 +34,7 @@
         <div class="dialogue-body">
             <h4 class="dialogue-heading">Barra de navegación</h4>Aquí encontrarás las acciones de usuario de forma tal
             que puedas iniciar sesión y cerrar, editar el perfil de usuario cuando desees...
-            <md-button ng-click="dialogueBtnCtrl()" id="dialogue-btn" class="md-raised md-primary" step-action>
-                Entendido
-            </md-button>
+            <button id="dialogue-btn" class="btn waves-effect waves-light" type="submit" name="action">Entendido</button>
         </div>
     </div>
 </div>
