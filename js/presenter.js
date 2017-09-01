@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     var steps = {
         prepare: {
-            template: "<div id=\"guide-bg\"><div id=\"guide-message\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div>",
+            template: "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div></div>",
             productName: "The Presenter",
             message:"cualquier vaina =D"
         },

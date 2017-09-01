@@ -2,50 +2,56 @@
 
 @dialogue-color: #0094fe;
 
+@font-face {
+  font-family: 'Soft Elegance';
+  src: url('../fonts/Soft_Elegance.ttf');
+}
+
 div[class^='step'],
 div[class*='step'] {
-    width: 50px;
-    height: 50px;
-    border: 1px solid #000;
+  width: 50px;
+  height: 50px;
+  border: 1px solid #000;
+  background: #333;
 }
 
 .container {
-    border-style: none;
-    width: 95%;
-    height: 100%;
-    position: absolute;
+  border-style: none;
+  width: 95%;
+  height: 100%;
+  position: absolute;
 }
 
 .toTheCenter {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .arribaALaIzquierda {
-    position: absolute;
-    left: 0;
-    top: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .arribaALaDerecha {
-    position: absolute;
-    right: 0;
-    top: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .abajoALaIzquierda {
-    position: absolute;
-    left: 0;
-    bottom: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }
 
 .abajoALaDerecha {
-    position: absolute;
-    right: 0;
-    bottom: 0;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 .pintar {
-    background-color: lightblue;
+  background-color: lightblue;
 }
 
 
@@ -55,56 +61,63 @@ The Guide Styles
 
 body.guide {
 md-backdrop {
-    display: none;
+  display: none;
 }
 md-dialog {
-    display: none;
+  display: none;
 &#progress-dialog {
-     display: none;
+   display: none;
  }
 }
 }
 
 #guide-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.95);
-    z-index: 10000;
-    opacity: 0;
-.transition(all 1s linear);
-&.show {
-     opacity: 1;
- }
-&.hide {
-     opacity: 0 !important;
- }
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 10000;
+  opacity: 0;
+  .transition(all 1s linear);
+  &.show {
+    opacity: 1;
+  }
+  &.hide {
+    opacity: 0 !important;
+  }
 }
 
 #guide-message {
-    text-align: center;
-    color: #000;
-    font-size: 28px;
-    font-family: 'Soft Elegance';
-.translate(0, -80%);
-.transition(opacity 3s ease-out);
-.product-name {
-    display: block;
-    font-size: 1.6em;
-    color: dodgerblue;
-}
-&.show {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  color: #000;
+  font-size: 28px;
+  font-family: 'Soft Elegance';
+  .translate(-50%, -80%);
+  .transition(opacity 3s ease-out);
+
+  #message-container {
+    .product-name {
+      display: block;
+      font-size: 1.6em;
+      color: dodgerblue;
+    }
+  }
+
+  &.show {
      opacity: 1;
      z-index: 10001;
- }
-&.hide {
+   }
+  &.hide {
      opacity: 0 !important;
- }
-}
+   }
+  }
 
-#guide-dialogue-box {
+  #guide-dialogue-box {
     height: auto;
     width: 300px;
     background: #fafafa;
@@ -113,44 +126,44 @@ md-dialog {
     padding: 20px;
     opacity: 1;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
-.transition(opacity .15s linear);
-    transition: all 0.3s linear;
-    background-color: lightgreen;
-&.show {
-     opacity: 1;
-     z-index: 10001;
- }
-&.hide {
-     opacity: 0 !important;
- }
-.dialogue-img {
-    display: table-cell;
-    vertical-align: top;
-    padding-right: 10px;
-    float: left;
-img {
-    width: 50px;
-    height: 50px;
-    padding: 4px;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    background: #fff;
-}
-}
-.dialogue-body {
-    display: table-cell;
-    vertical-align: top;
-    width: 10000px;
-.dialogue-heading {
-    margin-top: 4px;
-    margin-bottom: 5px;
-}
-.md-button {
-    margin-top: 20px;
-    padding: 0 20px;
-    margin-left: 0;
-}
-}
+    .transition(opacity .15s linear);
+        transition: all 0.3s linear;
+        background-color: lightgreen;
+    &.show {
+         opacity: 1;
+         z-index: 10001;
+     }
+    &.hide {
+         opacity: 0 !important;
+     }
+    .dialogue-img {
+        display: table-cell;
+        vertical-align: top;
+        padding-right: 10px;
+        float: left;
+    img {
+        width: 50px;
+        height: 50px;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        background: #fff;
+    }
+    }
+    .dialogue-body {
+        display: table-cell;
+        vertical-align: top;
+        width: 10000px;
+    .dialogue-heading {
+        margin-top: 4px;
+        margin-bottom: 5px;
+    }
+    .md-button {
+        margin-top: 20px;
+        padding: 0 20px;
+        margin-left: 0;
+    }
+  }
 }
 
 #dialogue-indicator {
