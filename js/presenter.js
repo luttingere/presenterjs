@@ -12,7 +12,7 @@ $(document).ready(function () {
 
     var steps = {
         prepare: {
-            template: "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div></div>",
+            template: "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"productName\" class=\"product-name\"></span><span id=\"message\"></span></div></div></div>",
             productName: "The Presenter",
             message: "cualquier vaina =D"
         },
@@ -23,11 +23,13 @@ $(document).ready(function () {
             position: "BOTTOM_RIGHT",
             button: "GOT IT!",
             indicatorPosition: "left-top",
-            drawOnTarget: "pintar",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "elevate",
             drawOnSelf: "",
             template: presenterDefaultBody,
-            delay: 300,
-            nextStep: "step2"
+            delay: 1000,
+            nextStep: "step2",
+            kill:"step3"
         },
         step2: {
             id: "step2",
@@ -35,10 +37,12 @@ $(document).ready(function () {
             text: "Este es el cuadrado 2 alineado en la esquina superior derecha, es mas cool que el cuadrado 1",
             position: "BOTTOM_LEFT",
             indicatorPosition: "right-top",
-            drawOnTarget: "pintar",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
             drawOnSelf: "",
             template: presenterDefaultBody,
-            nextStep: "step3"
+            nextStep: "step3",
+            kill:""
         },
         step3: {
             id: "step3",
@@ -47,10 +51,12 @@ $(document).ready(function () {
             position: "TOP_RIGHT",
             button: "GOT IT!",
             indicatorPosition: "left-bottom",
-            drawOnTarget: "pintar",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "elevate",
             drawOnSelf: "",
             template: presenterDefaultBody,
-            nextStep: "step4"
+            nextStep: "step4",
+            kill:""
         },
         step4: {
             id: "step4",
@@ -59,10 +65,12 @@ $(document).ready(function () {
             position: "TOP_LEFT",
             button: "",
             indicatorPosition: "right-bottom",
-            drawOnTarget: "pintar",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
             drawOnSelf: "",
             template: presenterDefaultBody,
-            nextStep: "step1"
+            nextStep: "step1",
+            kill:"step1"
         },
         end: {}
     };
@@ -105,7 +113,12 @@ $(document).ready(function () {
      * @param presenter
      */
     function onStepStart(step, stepElement, presenter) {
-        stepElement.addClass(step.drawOnTarget);
+        if(step.kill){
+            var lastStepAlive = $('body').find('.' + steps[step.kill].id);
+            lastStepAlive.removeClass(steps[step.kill].drawOnTargetAtEnd);
+        }
+        stepElement.removeClass(step.drawOnTargetAtEnd);
+        stepElement.addClass(step.drawOnTargetAtStart);
         presenter.addClass(step.drawOnSelf);
         transform(presenter, step);
         presenter.find('#dialogue-indicator').addClass(step.indicatorPosition);
@@ -118,7 +131,10 @@ $(document).ready(function () {
      * @param presenter
      */
     function onStepEnd(step, stepElement, presenter) {
-        stepElement.removeClass(step.drawOnTarget);
+        stepElement.removeClass(step.drawOnTargetAtStart);
+        if(step.drawOnTargetAtEnd){
+            stepElement.addClass(step.drawOnTargetAtEnd);
+        }
         presenter.removeClass(step.drawOnSelf);
         presenter.find('#dialogue-indicator').removeClass(step.indicatorPosition);
         if (step.template != null && step.template != "") {
@@ -182,7 +198,7 @@ $(document).ready(function () {
                 topAndLeft.left = -(((width + finalWidth + paddingFix) + fixedPoints) + marginFix);
                 break;
             case "TOP_RIGHT":
-                topAndLeft.top = -(finalWidth - paddingFix - 10);
+                topAndLeft.top = -(finalWidth - paddingFix - 12);
                 topAndLeft.left = (width + fixedPoints) + marginFix;
                 break;
             case "BOTTOM_LEFT":
@@ -215,12 +231,13 @@ $(document).ready(function () {
 
                 setTimeout(function () {
 
+                    $('body').find("#guide-message").addClass("hide");
                     show(steps['step1']);
 
                 }, steps['step1'].delay);
 
 
-            }, 300);
+            }, 1000);
 
         }, 3000);
     }
