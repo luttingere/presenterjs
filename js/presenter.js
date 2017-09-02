@@ -7,8 +7,8 @@ $(document).ready(function () {
     var presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
     var presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
         "<div class=\"dialogue-content\"><div class=\"dialogue-img\"><img src=\"https://image.flaticon.com/icons/svg/288/288082.svg\">" +
-        "</div> <div class=\"dialogue-body\"><h4 id=\"presenter_title\" class=\"dialogue-heading\"></h4><p id=\"presenter_message\"></p></div> " +
-        "<button id=\"dialogue-btn\" class=\"btn waves-effect waves-light hide\" type=\"submit\" name=\"action\">Entendido</button></div>";
+        "</div> <div class=\"dialogue-body\"><h4 id=\"presenter_title\" class=\"dialogue-heading\"></h4><p id=\"presenter_message\"></p>" +
+        "<button id=\"dialogue-btn\" class=\"btn waves-effect waves-light hide\" type=\"submit\" name=\"action\">Entendido</button></div></div>";
 
     var steps = {
         prepare: {
@@ -90,7 +90,7 @@ $(document).ready(function () {
             onStepEnd(step, stepElement, presenter)
             show(steps[step.nextStep]);
         }).css({
-            "position": "relative",
+            "position": "absolute",
             "left": stepElement.position().left + (topAndLeft.left),
             "top": stepElement.position().top + (topAndLeft.top)
         });
@@ -159,21 +159,30 @@ $(document).ready(function () {
             "top": "",
             "left": ""
         }
+        console.log(element.position());
+        console.log(element.height());
+        console.log(element.width());
         var height = element.height();
         var width = element.width();
         var fixedPoints = 1;
         var finalHeight = presenter.height() - element.height();
         var finalWidth = presenter.width() - element.width();
+        if (finalHeight < 0) {
+            finalHeight = finalHeight * -1;
+        }
+        if (finalWidth < 0) {
+            finalWidth = finalWidth * -1;
+        }
         var paddingFix = presenter.css('padding');
         paddingFix = Number(paddingFix.replace('px', '')) * 2;
         var marginFix = 30;
         switch (position) {
             case "TOP_LEFT":
-                topAndLeft.top = -((height + finalHeight + paddingFix) + fixedPoints) + marginFix;
-                topAndLeft.left = -((width + finalWidth + paddingFix) + fixedPoints) - marginFix;
+                topAndLeft.top = -(((finalWidth - paddingFix) + fixedPoints) - marginFix);
+                topAndLeft.left = -(((width + finalWidth + paddingFix) + fixedPoints) + marginFix);
                 break;
             case "TOP_RIGHT":
-                topAndLeft.top = -((height + finalHeight + paddingFix) + fixedPoints) + marginFix;
+                topAndLeft.top = -(finalWidth - paddingFix - 10);
                 topAndLeft.left = (width + fixedPoints) + marginFix;
                 break;
             case "BOTTOM_LEFT":
