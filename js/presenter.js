@@ -29,7 +29,9 @@ $(document).ready(function () {
             template: presenterDefaultBody,
             delay: 1000,
             nextStep: "step2",
-            kill:"step3"
+            kill:"step3",
+            callback:function(){
+            }
         },
         step2: {
             id: "step2",
@@ -42,7 +44,9 @@ $(document).ready(function () {
             drawOnSelf: "",
             template: presenterDefaultBody,
             nextStep: "step3",
-            kill:""
+            kill:"",
+            callback:function(){
+            }
         },
         step3: {
             id: "step3",
@@ -56,7 +60,9 @@ $(document).ready(function () {
             drawOnSelf: "",
             template: presenterDefaultBody,
             nextStep: "step4",
-            kill:""
+            kill:"",
+            callback:function(){
+            }
         },
         step4: {
             id: "step4",
@@ -70,7 +76,9 @@ $(document).ready(function () {
             drawOnSelf: "",
             template: presenterDefaultBody,
             nextStep: "step1",
-            kill:"step1"
+            kill:"step1",
+            callback:function(){
+            }
         },
         end: {}
     };
@@ -83,6 +91,7 @@ $(document).ready(function () {
         }
         return presenter;
     }
+
 
     /**
      *
@@ -134,6 +143,9 @@ $(document).ready(function () {
         stepElement.removeClass(step.drawOnTargetAtStart);
         if(step.drawOnTargetAtEnd){
             stepElement.addClass(step.drawOnTargetAtEnd);
+        }
+        if(step.callback){
+            step.callback();
         }
         presenter.removeClass(step.drawOnSelf);
         presenter.find('#dialogue-indicator').removeClass(step.indicatorPosition);
