@@ -213,6 +213,8 @@ $(document).ready(function () {
         return topAndLeft;
     }
 
+
+
     function runShowCase(steps) {
         var template = steps['prepare'].template;
         $('body').append(template)
@@ -243,4 +245,5 @@ $(document).ready(function () {
     }
 
     runShowCase(steps);
+    //show(steps['step2']);
 });
