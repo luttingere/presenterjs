@@ -18,15 +18,10 @@ function getPresenterInstance(step) {
  * @param step
  */
 function show(step) {
-    //var stepElement = $('.'+step.id);
     var stepElement = $('body').find('.' + step.id);
     var presenter = getPresenterInstance(step);
     var topAndLeft = findPosition(step.position, stepElement, presenter);
-    presenter.off("click");
-    presenter.on("click", function () {
-        onStepEnd(step, stepElement, presenter)
-        show(steps[step.nextStep]);
-    }).css({
+    presenter.css({
         "position": "absolute",
         "left": stepElement.position().left + (topAndLeft.left),
         "top": stepElement.position().top + (topAndLeft.top)
@@ -49,7 +44,7 @@ function onStepStart(step, stepElement, presenter) {
     stepElement.removeClass(step.drawOnTargetAtEnd);
     stepElement.addClass(step.drawOnTargetAtStart);
     presenter.addClass(step.drawOnSelf);
-    transform(presenter, step);
+    transform(presenter, step,stepElement);
     presenter.find('#dialogue-indicator').addClass(step.indicatorPosition);
 }
 
@@ -79,21 +74,33 @@ function onStepEnd(step, stepElement, presenter) {
  * @param presenter
  * @param step
  */
-function transform(presenter, step) {
+function transform(presenter, step,stepElement) {
     if (step.template != null && step.template != "") {
         $(step.template).css({}).appendTo(presenter);
     } else {
         $(presenterDefaultBody).css({}).appendTo(presenter);
     }
+    var presenterBtn =  presenter.find('#dialogue-btn')
     if (!step.button) {
-        presenter.find('#dialogue-btn').addClass("hide");
+        presenterBtn.addClass("hide");
     } else {
-        presenter.find('#dialogue-btn').removeClass("hide");
-        presenter.find('#dialogue-btn').html(step.button);
+        presenterBtn.removeClass("hide");
+        presenterBtn.html(step.button);
+        presenterBtn.off("click");
+        presenterBtn.on("click", function () {
+            onStepEnd(step, stepElement, presenter)
+            show(steps[step.nextStep]);
+        });
     }
     presenter.find('#presenter_title').html(step.title);
     presenter.find('#presenter_message').html(step.text);
     presenter.addClass("show");
+
+
+
+
+
+
 }
 
 /**
