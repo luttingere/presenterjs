@@ -7,10 +7,7 @@ PresenterJS.prototype.presenterDefaultBody = "<div id=\"dialogue-indicator\"></d
     "</div> <div class=\"dialogue-body\"><h4 id=\"presenter_title\" class=\"dialogue-heading\"></h4><p id=\"presenter_message\"></p>" +
     "<button id=\"dialogue-btn\" class=\"btn waves-effect waves-light hide\" type=\"submit\" name=\"action\">Entendido</button></div></div>";
 
-/**
- *
- * @param step
- */
+
 PresenterJS.prototype.getPresenterInstance = function() {
     console.log(this);
     var presenter = $('#guide-dialogue-box');
@@ -181,9 +178,12 @@ PresenterJS.prototype.runShowCase = function(){
             setTimeout(function () {
 
                 $('body').find("#guide-message").addClass("hide");
-                PresenterJS.prototype.show(steps['step1']);
 
-            }, steps['step1'].delay);
+                setTimeout(function(){
+                    PresenterJS.prototype.show(steps['step1']);
+                },steps['step1'].delay);
+
+            }, 3000);
 
         }, 1000);
 
