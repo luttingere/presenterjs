@@ -5,7 +5,7 @@ PresenterJS.prototype.presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"
 PresenterJS.prototype.presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
     "<div class=\"dialogue-content\"><div class=\"dialogue-img\"><img src=\"https://image.flaticon.com/icons/svg/288/288082.svg\">" +
     "</div> <div class=\"dialogue-body\"><h4 id=\"presenter_title\" class=\"dialogue-heading\"></h4><p id=\"presenter_message\"></p>" +
-    "<button id=\"dialogue-btn\" class=\"btn waves-effect waves-light hide\" type=\"submit\" name=\"action\">Entendido</button></div></div>";
+    "<button id=\"dialogue-btn\" class=\"btn waves-effect waves-light show\" type=\"submit\" name=\"action\">Entendido</button></div></div>";
 
 
 PresenterJS.prototype.getPresenterInstance = function() {
@@ -52,6 +52,7 @@ PresenterJS.prototype.onStepStart = function(step, stepElement, presenter) {
         var lastStepAlive = $('body').find('.' + steps[step.kill].id);
         lastStepAlive.removeClass(steps[step.kill].drawOnTargetAtEnd);
     }
+    $('body').find("#guide-bg").css("background",step.bg_color);
     stepElement.removeClass(step.drawOnTargetAtEnd);
     stepElement.addClass(step.drawOnTargetAtStart);
     presenter.addClass(step.drawOnSelf);
@@ -99,8 +100,8 @@ PresenterJS.prototype.transform = function(presenter, step,stepElement) {
         presenterBtn.html(step.button);
         presenterBtn.off("click");
         presenterBtn.on("click", function () {
-            this.onStepEnd(step, stepElement, presenter)
-            this.show(steps[step.nextStep]);
+            PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
+            PresenterJS.prototype.show(steps[step.nextStep]);
         });
     }
     presenter.find('#presenter_title').html(step.title);
