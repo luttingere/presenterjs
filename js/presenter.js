@@ -1,37 +1,43 @@
-var presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
-var presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
+function PresenterJS() {}
+
+PresenterJS.prototype.steps = null;
+PresenterJS.prototype.presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
+PresenterJS.prototype.presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
     "<div class=\"dialogue-content\"><div class=\"dialogue-img\"><img src=\"https://image.flaticon.com/icons/svg/288/288082.svg\">" +
     "</div> <div class=\"dialogue-body\"><h4 id=\"presenter_title\" class=\"dialogue-heading\"></h4><p id=\"presenter_message\"></p>" +
     "<button id=\"dialogue-btn\" class=\"btn waves-effect waves-light hide\" type=\"submit\" name=\"action\">Entendido</button></div></div>";
-var steps = null;
-function getPresenterInstance(step) {
+
+
+PresenterJS.prototype.getPresenterInstance = function() {
+    console.log(this);
     var presenter = $('#guide-dialogue-box');
     if (presenter.html() == undefined) {
-        $(presenterDefaultTemplate).appendTo($('body'));
+        console.log(this.presenterDefaultTemplate);
+        $(this.presenterDefaultTemplate).appendTo($('body'));
         presenter = $('#guide-dialogue-box');
     }
     return presenter;
+}
+
+
+PresenterJS.prototype.getPresenterTemplate = function() {
+    return this.presenterDefaultTemplate;
 }
 
 /**
  *
  * @param step
  */
-function show(step) {
-    //var stepElement = $('.'+step.id);
+PresenterJS.prototype.show = function(step) {
     var stepElement = $('body').find('.' + step.id);
-    var presenter = getPresenterInstance(step);
-    var topAndLeft = findPosition(step.position, stepElement, presenter);
-    presenter.off("click");
-    presenter.on("click", function () {
-        onStepEnd(step, stepElement, presenter)
-        show(steps[step.nextStep]);
-    }).css({
+    var presenter = this.getPresenterInstance();
+    var topAndLeft = this.findPosition(step.position, stepElement, presenter);
+    presenter.css({
         "position": "absolute",
         "left": stepElement.position().left + (topAndLeft.left),
         "top": stepElement.position().top + (topAndLeft.top)
     });
-    onStepStart(step, stepElement, presenter);
+    this.onStepStart(step, stepElement, presenter);
 }
 
 
@@ -41,7 +47,7 @@ function show(step) {
  * @param stepElement
  * @param presenter
  */
-function onStepStart(step, stepElement, presenter) {
+PresenterJS.prototype.onStepStart = function(step, stepElement, presenter) {
     if (step.kill) {
         var lastStepAlive = $('body').find('.' + steps[step.kill].id);
         lastStepAlive.removeClass(steps[step.kill].drawOnTargetAtEnd);
@@ -49,7 +55,7 @@ function onStepStart(step, stepElement, presenter) {
     stepElement.removeClass(step.drawOnTargetAtEnd);
     stepElement.addClass(step.drawOnTargetAtStart);
     presenter.addClass(step.drawOnSelf);
-    transform(presenter, step);
+    this.transform(presenter, step,stepElement);
     presenter.find('#dialogue-indicator').addClass(step.indicatorPosition);
 }
 
@@ -59,7 +65,7 @@ function onStepStart(step, stepElement, presenter) {
  * @param stepElement
  * @param presenter
  */
-function onStepEnd(step, stepElement, presenter) {
+PresenterJS.prototype.onStepEnd = function(step, stepElement, presenter) {
     stepElement.removeClass(step.drawOnTargetAtStart);
     if (step.drawOnTargetAtEnd) {
         stepElement.addClass(step.drawOnTargetAtEnd);
@@ -79,17 +85,23 @@ function onStepEnd(step, stepElement, presenter) {
  * @param presenter
  * @param step
  */
-function transform(presenter, step) {
+PresenterJS.prototype.transform = function(presenter, step,stepElement) {
     if (step.template != null && step.template != "") {
         $(step.template).css({}).appendTo(presenter);
     } else {
-        $(presenterDefaultBody).css({}).appendTo(presenter);
+        $(this.presenterDefaultBody).css({}).appendTo(presenter);
     }
+    var presenterBtn =  presenter.find('#dialogue-btn')
     if (!step.button) {
-        presenter.find('#dialogue-btn').addClass("hide");
+        presenterBtn.addClass("hide");
     } else {
-        presenter.find('#dialogue-btn').removeClass("hide");
-        presenter.find('#dialogue-btn').html(step.button);
+        presenterBtn.removeClass("hide");
+        presenterBtn.html(step.button);
+        presenterBtn.off("click");
+        presenterBtn.on("click", function () {
+            this.onStepEnd(step, stepElement, presenter)
+            this.show(steps[step.nextStep]);
+        });
     }
     presenter.find('#presenter_title').html(step.title);
     presenter.find('#presenter_message').html(step.text);
@@ -103,7 +115,7 @@ function transform(presenter, step) {
  * @param presenter
  * @returns {{top: string, left: string}}
  */
-function findPosition(position, element, presenter) {
+PresenterJS.prototype.findPosition = function(position, element, presenter) {
     var topAndLeft = {
         "top": "",
         "left": ""
@@ -146,11 +158,11 @@ function findPosition(position, element, presenter) {
     return topAndLeft;
 }
 
-function initPresenter(stepsArray) {
+PresenterJS.prototype.initPresenter = function(stepsArray) {
     steps = stepsArray;
 }
 
-function runShowCase() {
+PresenterJS.prototype.runShowCase = function(){
     var template = steps['prepare'].template;
     $('body').append(template)
     $('body').css({
@@ -166,10 +178,12 @@ function runShowCase() {
             setTimeout(function () {
 
                 $('body').find("#guide-message").addClass("hide");
-                show(steps['step1']);
 
-            }, steps['step1'].delay);
+                setTimeout(function(){
+                    PresenterJS.prototype.show(steps['step1']);
+                },steps['step1'].delay);
 
+            }, 3000);
 
         }, 1000);
 
