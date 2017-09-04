@@ -14,9 +14,10 @@ $(document).ready(function () {
             id: "step1",
             title: "Cuadrito 1",
             text: "Este es el cuadrado 1 alineado en la esquina superior izquierda, el no hace nada solo esta alli para enseñarte a usar esta mierda :)",
-            position: "BOTTOM_RIGHT",
+            position: "BOTTOM_LEFT",
+            side: "IN",
             button: "GOT IT!",
-            indicatorPosition: "left-top",
+            indicatorPosition: "top-left",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "elevate",
             drawOnSelf: "",
@@ -25,6 +26,7 @@ $(document).ready(function () {
             nextStep: "step2",
             kill: "step3",
             callback: function () {
+
             }
         },
         step2: {
@@ -32,6 +34,7 @@ $(document).ready(function () {
             title: "Cuadradito 2",
             text: "Este es el cuadrado 2 alineado en la esquina superior derecha, es mas cool que el cuadrado 1",
             position: "BOTTOM_LEFT",
+            side:"IN",
             indicatorPosition: "right-top",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "",
@@ -76,7 +79,9 @@ $(document).ready(function () {
         },
         end: {}
     };
+    //initPresenter(steps);
     initPresenter(steps);
+    //show(steps['step1']);
     runShowCase();
 });
 

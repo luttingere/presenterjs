@@ -1,0 +1,32 @@
+{
+  "name": "presenterjs",
+  "version": "1.0.0",
+  "description": "tool to help developers to explain their apps ",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "presenter": "build-bundle src/ -o dist -v 1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luttingere/presenterjs.git"
+  },
+  "author": "Eduardo Luttinger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luttingere/presenterjs/issues"
+  },
+  "homepage": "https://github.com/luttingere/presenterjs#readme",
+  "dependencies": {
+    "build-bundle": "^2.0.8"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.8.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^3.3.2",
+    "gulp-minify": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0"
+  }
+}
