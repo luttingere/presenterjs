@@ -12,30 +12,30 @@ $(document).ready(function () {
         },
         step1: {
             id: "step1",
-            title: "Cuadrito 1",
-            text: "Este es el cuadrado 1 alineado en la esquina superior izquierda, el no hace nada solo esta alli para enseñarte a usar esta mierda :)",
+            title: "1",
+            text: "Ubicacion: BOTTOM_LEFT, alineacion: LEFT",
             position: "BOTTOM_LEFT",
-            side: "IN",
+            align: "LEFT",
             button: "GOT IT!",
-            indicatorPosition: "top-left",
+            indicatorPosition: "top-right",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "elevate",
             drawOnSelf: "",
             template: "",
-            delay: 1000,
+            delay: 300,
             nextStep: "step2",
-            kill: "step3",
+            kill: "",
             callback: function () {
-
             }
         },
         step2: {
-            id: "step2",
-            title: "Cuadradito 2",
-            text: "Este es el cuadrado 2 alineado en la esquina superior derecha, es mas cool que el cuadrado 1",
+            id: "step1",
+            title: "2",
+            text: "Ubicacion: BOTTOM_LEFT, alineacion: RIGHT",
             position: "BOTTOM_LEFT",
-            side:"IN",
-            indicatorPosition: "right-top",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "top-left",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "",
             drawOnSelf: "",
@@ -46,12 +46,13 @@ $(document).ready(function () {
             }
         },
         step3: {
-            id: "step3",
-            title: "Cuadradito 3",
-            text: "Este es el cuadrado 3 alineado en la esquina inferior izquierda no hace un coño tampoco",
-            position: "TOP_RIGHT",
+            id: "step1",
+            title: "3",
+            text: "Ubicacion: LEFT_BOTTOM, alineacion: LEFT",
+            position: "LEFT_BOTTOM",
             button: "GOT IT!",
-            indicatorPosition: "left-bottom",
+            align: "LEFT",
+            indicatorPosition: "right-top",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "elevate",
             drawOnSelf: "",
@@ -62,26 +63,231 @@ $(document).ready(function () {
             }
         },
         step4: {
-            id: "step4",
-            title: "Cuadradito 4",
-            text: "Este es el cuadrado 4 alineado en la esquina inferior derecha es el ultimo, aqui termina la presentacion",
+            id: "step1",
+            title: "4",
+            text: "Ubicacion: LEFT_BOTTOM, alineacion: RIGHT",
+            position: "LEFT_BOTTOM",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "left-top",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step5",
+            kill: "step1",
+            callback: function () {
+            }
+        },
+        step5: {
+            id: "step1",
+            title: "5",
+            text: "Ubicacion: BOTTOM_RIGHT, alineacion: RIGHT",
+            position: "BOTTOM_RIGHT",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "top-left",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step6",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step6: {
+            id: "step1",
+            title: "6",
+            text: "Ubicacion: BOTTOM_RIGHT, alineacion: LEFT",
+            position: "BOTTOM_RIGHT",
+            align: "LEFT",
+            button: "GOT IT!",
+            indicatorPosition: "top-right",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step7",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step7: {
+            id: "step1",
+            title: "7",
+            text: "Ubicacion: RIGHT_BOTTOM, alineacion: RIGHT",
+            position: "RIGHT_BOTTOM",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "left-top",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step8",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step8: {
+            id: "step1",
+            title: "8",
+            text: "Ubicacion: RIGHT_BOTTOM, alineacion: LEFT",
+            position: "RIGHT_BOTTOM",
+            align: "LEFT",
+            button: "GOT IT!",
+            indicatorPosition: "right-top",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step9",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step9: {
+            id: "step1",
+            title: "9",
+            text: "Ubicacion: TOP_RIGHT, alineacion: RIGHT",
+            position: "TOP_RIGHT",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "bottom-left",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step10",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step10: {
+            id: "step1",
+            title: "10",
+            text: "Ubicacion: TOP_RIGHT, alineacion: LEFT",
+            position: "TOP_RIGHT",
+            align: "LEFT",
+            button: "GOT IT!",
+            indicatorPosition: "bottom-right",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step11",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step11: {
+            id: "step1",
+            title: "11",
+            text: "Ubicacion: RIGHT_TOP, alineacion: RIGHT",
+            position: "RIGHT_TOP",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "left-bottom",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step12",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step12: {
+            id: "step1",
+            title: "10",
+            text: "Ubicacion: RIGHT_TOP, alineacion: LEFT",
+            position: "RIGHT_TOP",
+            align: "LEFT",
+            button: "GOT IT!",
+            indicatorPosition: "right-bottom",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step13",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step13: {
+            id: "step1",
+            title: "13",
+            text: "Ubicacion: TOP_LEFT, alineacion: RIGHT",
             position: "TOP_LEFT",
-            button: "",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "bottom-left",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step14",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step14: {
+            id: "step1",
+            title: "14",
+            text: "Ubicacion: TOP_LEFT, alineacion: LEFT",
+            position: "TOP_LEFT",
+            align: "LEFT",
+            button: "GOT IT!",
+            indicatorPosition: "bottom-right",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step15",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step15: {
+            id: "step1",
+            title: "15",
+            text: "Ubicacion: LEFT_TOP, alineacion: RIGHT",
+            position: "LEFT_TOP",
+            align: "RIGHT",
+            button: "GOT IT!",
+            indicatorPosition: "left-bottom",
+            drawOnTargetAtStart: "elevate",
+            drawOnTargetAtEnd: "",
+            drawOnSelf: "",
+            template: "",
+            nextStep: "step16",
+            kill: "",
+            callback: function () {
+            }
+        },
+        step16: {
+            id: "step1",
+            title: "16",
+            text: "Ubicacion: LEFT_TOP, alineacion: LEFT",
+            position: "LEFT_TOP",
+            align: "LEFT",
+            button: "GOT IT!",
             indicatorPosition: "right-bottom",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "",
             drawOnSelf: "",
             template: "",
             nextStep: "step1",
-            kill: "step1",
+            kill: "",
             callback: function () {
             }
         },
         end: {}
     };
-    //initPresenter(steps);
-    initPresenter(steps);
-    //show(steps['step1']);
-    runShowCase();
+    var presenterJs = new PresenterJS();
+    presenterJs.initPresenter(steps);
+    //presenterJs.show(steps['step14']);
+    presenterJs.runShowCase();
 });
 
