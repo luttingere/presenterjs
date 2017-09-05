@@ -51,11 +51,11 @@ PresenterJS.prototype.show = function (step) {
  * @param presenter
  */
 PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
-    PresenterJS.prototype.registerToResizeEvent(step);
+    //PresenterJS.prototype.registerToResizeEvent(step);
     PresenterJS.prototype.killAPreviousStep(step);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
     var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
-    PresenterJS.prototype.adjustScreenScroll(stepElement);
+    //PresenterJS.prototype.adjustScreenScroll(stepElement);
     PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
 }
 
@@ -83,7 +83,7 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
  * @param presenterPosition
  */
 PresenterJS.prototype.adjustScreenScroll = function (element) {
-    $(window).scrollTo(0, element.offset().top);
+   // $(window).scrollTo(0, element.offset().top);
 }
 
 /**
@@ -93,12 +93,12 @@ PresenterJS.prototype.adjustScreenScroll = function (element) {
  * @param presenterPosition
  */
 PresenterJS.prototype.registerToResizeEvent = function (step) {
-    $(window).off('resize');
-    $(window).on('resize', function () {
-        var win = $(this); //this = window
-        console.log("Resize", win);
-        PresenterJS.prototype.show(step);
-    });
+    // $(window).off('resize');
+    // $(window).on('resize', function () {
+    //     var win = $(this); //this = window
+    //     console.log("Resize", win);
+    //     PresenterJS.prototype.show(step);
+    // });
 }
 
 
