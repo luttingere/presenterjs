@@ -51,9 +51,11 @@ PresenterJS.prototype.show = function (step) {
  * @param presenter
  */
 PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
+    PresenterJS.prototype.registerToResizeEvent(step);
     PresenterJS.prototype.killAPreviousStep(step);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
     var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
+    PresenterJS.prototype.adjustScreenScroll(stepElement);
     PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
 }
 
@@ -73,6 +75,33 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
     //End of the step
 }
 
+
+/**
+ *
+ * @param stepElement
+ * @param presenter
+ * @param presenterPosition
+ */
+PresenterJS.prototype.adjustScreenScroll = function (element) {
+    $(window).scrollTo(0, element.offset().top);
+}
+
+/**
+ *
+ * @param stepElement
+ * @param presenter
+ * @param presenterPosition
+ */
+PresenterJS.prototype.registerToResizeEvent = function (step) {
+    $(window).off('resize');
+    $(window).on('resize', function () {
+        var win = $(this); //this = window
+        console.log("Resize", win);
+        PresenterJS.prototype.show(step);
+    });
+}
+
+
 /**
  *
  * @param stepElement
@@ -84,7 +113,10 @@ PresenterJS.prototype.relocateThePresenterOnTheScreen = function (stepElement, p
         "left": stepElement.position().left + (presenterPosition.left),
         "top": stepElement.position().top + (presenterPosition.top)
     });
+
 }
+
+
 /**
  *
  * @param stepElement
@@ -136,12 +168,16 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
     }
 
     //this add the required style to the view group that belong to the step
-    if (step.group != null && step.group != null) {
-        var stepViewGroup = $('body').find('.' + step.group);
-        console.log(stepViewGroup);
-        if (stepViewGroup.html() != undefined) {
-            stepViewGroup.addClass(step.groupClass);
-        }
+    if (step.classesActions && step.classesActions.length > 0) {
+        step.classesActions.forEach(function (element) {
+            if (element.className) {
+                var elementHtml = $('body').find('.' + element.className);
+                if (elementHtml != undefined) {
+                    elementHtml.removeClass(element.classesToRemove);
+                    elementHtml.addClass(element.classesToAdd);
+                }
+            }
+        });
     }
 
     //sadd functionality to the button of the presenter
@@ -184,6 +220,16 @@ PresenterJS.prototype.killAPreviousStep = function (step) {
                 if (stepToKill.group != null && stepToKill.group != "") {
                     var stepViewGroup = $('body').find('.' + stepToKill.group);
                     stepViewGroup.removeClass(stepToKill.groupClass);
+                }
+                if (stepToKill.classesActions && stepToKill.classesActions.length > 0) {
+                    stepToKill.classesActions.forEach(function (element) {
+                        if (element.className) {
+                            var elementHtml = $('body').find('.' + element.className);
+                            if (elementHtml != undefined) {
+                                elementHtml.removeClass(element.classesToAdd);
+                            }
+                        }
+                    });
                 }
             }
         }
@@ -331,7 +377,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.left = (initialLeftPosition + (elementWidth - marginFix - presenterPadding + fixedPoints));
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (difference.width  + presenterPadding ));
+                    presenterPosition.left = (initialLeftPosition - (difference.width + presenterPadding ));
                     break;
             }
             switch (alignVertical) {
