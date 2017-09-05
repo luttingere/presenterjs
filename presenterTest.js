@@ -19,7 +19,7 @@ $(document).ready(function () {
             align_horizontal: "LEFT",
             align_vertical: "TOP",
             button: "GOT IT!",
-            indicatorPosition: "right-bottom",
+            indicatorPosition: "left-bottom",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "elevate",
             drawOnSelf: "",
