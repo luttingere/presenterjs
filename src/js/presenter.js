@@ -378,6 +378,7 @@ PresenterJS.prototype.runShowCase = function () {
 
                 setTimeout(function () {
                     PresenterJS.prototype.show(steps['step1']);
+                    $('body').find("#guide-bg").removeClass('show');
                 }, steps['step1'].delay);
 
             }, 1000);
