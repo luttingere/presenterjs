@@ -38,7 +38,7 @@ PresenterJS.prototype.getPresenterTemplate = function () {
 PresenterJS.prototype.show = function (step) {
     var stepElement = $('body').find('#' + step.id);
     var presenter = PresenterJS.prototype.getPresenterInstance();
-    var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align, stepElement, presenter);
+    var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
     console.log(presenterPosition);
     PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
     this.onStepStart(step, stepElement, presenter);
@@ -137,10 +137,10 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
     }
 
     //this add the required style to the view group that belong to the step
-    if(step.group != null && step.group != null){
+    if (step.group != null && step.group != null) {
         var stepViewGroup = $('body').find('.' + step.group);
         console.log(stepViewGroup);
-        if(stepViewGroup.html() != undefined){
+        if (stepViewGroup.html() != undefined) {
             stepViewGroup.addClass(step.groupClass);
         }
     }
@@ -183,7 +183,7 @@ PresenterJS.prototype.killAPreviousStep = function (step) {
             if (lastStepAlive.html() != undefined) {
                 lastStepAlive.removeClass(steps[step.kill].drawOnTargetAtEnd);
                 if (stepToKill.group != null && stepToKill.group != "") {
-                    var stepViewGroup = $('body').find('.' +stepToKill.group);
+                    var stepViewGroup = $('body').find('.' + stepToKill.group);
                     stepViewGroup.removeClass(stepToKill.groupClass);
                 }
             }
@@ -198,7 +198,7 @@ PresenterJS.prototype.killAPreviousStep = function (step) {
  * @param presenter
  * @returns {{top: string, left: string}}
  */
-PresenterJS.prototype.calculateNextPositionForThePresenter = function (position, align, element, presenter) {
+PresenterJS.prototype.calculateNextPositionForThePresenter = function (position, alignHorizontal, alignVertical, element, presenter) {
     var presenterPosition = {
         "top": "",
         "left": ""
@@ -213,32 +213,43 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     var marginFix = 30;
     switch (position) {
         case "TOP_LEFT":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.top = -elementWidth;
-                    presenterPosition.left = -marginFix;
+                    presenterPosition.left = - (marginFix - fixedPoints);
                     break;
                 default:
+                    presenterPosition.left = -(difference.width + elementWidth + presenterPadding - marginFix - fixedPoints);
+                    break;
+            }
+            switch (alignVertical) {
+                case "TOP":
                     presenterPosition.top = -elementWidth;
-                    presenterPosition.left = -(difference.width + elementWidth + presenterPadding - marginFix);
+                    break;
+                default:
+                    presenterPosition.top = marginFix;
                     break;
             }
             break;
         case "LEFT_TOP":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.top = -(elementWidth - presenterPadding + 12 + fixedPoints - marginFix);
                     presenterPosition.left = marginFix;
                     break;
                 default:
-                    presenterPosition.top = -(elementWidth - presenterPadding + 12 + fixedPoints - marginFix);
-                    ;
                     presenterPosition.left = -(((elementWidth + difference.width + presenterPadding) + fixedPoints) + marginFix);
+                    break;
+            }
+            switch (alignVertical) {
+                case "TOP":
+                    presenterPosition.top = -(elementWidth - presenterPadding + 12 + fixedPoints - marginFix);
+                    break;
+                default:
+                    presenterPosition.top = -(elementWidth - presenterPadding + 12 + fixedPoints - marginFix);
                     break;
             }
             break;
         case "TOP_RIGHT":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
                     presenterPosition.top = (presenterPadding - 12) - (difference.height + marginFix);
                     presenterPosition.left = elementWidth - marginFix;
@@ -250,19 +261,25 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             break;
         case "RIGHT_TOP":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.top = -( difference.height - presenterPadding - 12);
                     presenterPosition.left = (elementWidth + fixedPoints) + marginFix;
                     break;
                 default:
-                    presenterPosition.top = -( difference.height - presenterPadding - 12);
                     presenterPosition.left = -(elementWidth + fixedPoints - presenterPadding) + marginFix;
+                    break;
+            }
+            switch (alignVertical) {
+                case "TOP":
+                    presenterPosition.top = -( difference.height - presenterPadding - marginFix - 12);
+                    break;
+                default:
+                    presenterPosition.top = ( elementWidth - difference.height - presenterPadding + marginFix + 12);
                     break;
             }
             break;
         case "BOTTOM_LEFT":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
                     presenterPosition.top = (elementHeight + fixedPoints) + marginFix;
                     presenterPosition.left = -marginFix;
@@ -274,7 +291,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             break;
         case "LEFT_BOTTOM":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
                     presenterPosition.top = (elementHeight + fixedPoints) - marginFix;
                     presenterPosition.left = -(fixedPoints + marginFix - presenterPadding) + marginFix;
@@ -286,7 +303,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             break;
         case"BOTTOM_RIGHT":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
                     presenterPosition.top = (elementHeight + fixedPoints) + marginFix
                     presenterPosition.left = (elementWidth + fixedPoints) - marginFix;
@@ -298,7 +315,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             break;
         case"RIGHT_BOTTOM":
-            switch (align) {
+            switch (alignHorizontal) {
                 case "RIGHT":
                     presenterPosition.top = (elementHeight + fixedPoints) - marginFix
                     presenterPosition.left = (elementWidth + fixedPoints) + marginFix;
