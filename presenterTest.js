@@ -7,11 +7,13 @@ $(document).ready(function () {
     var steps = {
         prepare: {
             template: "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"productName\" class=\"product-name\"></span><span id=\"message\"></span></div></div></div>",
-            productName: "The Presenter",
-            message: "cualquier vaina =D"
+            productName: "PresenterJS",
+            message: "A cool tool to explain ur apps step by step"
         },
         step1: {
             id: "step1",
+            group:"square1",
+            groupClass:"elevate",
             title: "1",
             text: "Ubicacion: BOTTOM_LEFT, alineacion: LEFT",
             position: "BOTTOM_LEFT",
@@ -29,7 +31,7 @@ $(document).ready(function () {
             }
         },
         step2: {
-            id: "step1",
+            id: "step2",
             title: "2",
             text: "Ubicacion: BOTTOM_LEFT, alineacion: RIGHT",
             position: "BOTTOM_LEFT",
@@ -41,7 +43,7 @@ $(document).ready(function () {
             drawOnSelf: "",
             template: "",
             nextStep: "step3",
-            kill: "",
+            kill: "step1",
             callback: function () {
             }
         },
@@ -200,7 +202,7 @@ $(document).ready(function () {
         },
         step12: {
             id: "step1",
-            title: "10",
+            title: "12",
             text: "Ubicacion: RIGHT_TOP, alineacion: LEFT",
             position: "RIGHT_TOP",
             align: "LEFT",
@@ -285,6 +287,7 @@ $(document).ready(function () {
         },
         end: {}
     };
+
     var presenterJs = new PresenterJS();
     presenterJs.initPresenter(steps);
     //presenterJs.show(steps['step14']);
