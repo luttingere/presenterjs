@@ -5,23 +5,32 @@ var gulp = require('gulp');
 var less = require('gulp-less');
 var concat = require('gulp-concat');
 var minify = require('gulp-minify');
-var jsFiles = 'src/script/*.js', jsDest = 'src/build/js/';
+var jsFiles = 'src/lib/*.js', jsDest = 'src/build/js/';
 
-// gulp.task('pack-css', function () {
-//     return gulp.src('src/style/css/*.css')
-//         .pipe(concat('presenter.css'))
-//         .pipe(gulp.dest('src/build/css/'));
-// });
+gulp.task('pack-css-libraries', function () {
+    return gulp.src('src/style/css/*.css')
+        .pipe(concat('presenterLibraries.css'))
+        .pipe(minify())
+        .pipe(gulp.dest('dist/presenter/css/'));
+});
 gulp.task('pack-less', function () {
     return gulp.src('src/style/less/*.less')
         .pipe(less())
         .pipe(concat('presenter.css'))
-        .pipe(gulp.dest('src/build/css/'));
+        .pipe(minify())
+        .pipe(gulp.dest('dist/presenter/css/'));
 });
-gulp.task('pack-js', function () {
-    return gulp.src(['src/script/jquery-3.2.1.min.js','src/script/materialize.min.js','src/script/bootstrap.min.js','src/script/presenter.js'])
+gulp.task('presenterjs-libraries', function () {
+    return gulp.src(['src/lib/jquery-3.2.1.min.js', 'src/lib/materialize.min.js', 'src/lib/bootstrap.min.js'])
+        .pipe(concat('thirdpartylibraries.js'))
+        .pipe(minify())
+        .pipe(gulp.dest('dist/presenter/js/'));
+});
+gulp.task('presenterjs-build', function () {
+    return gulp.src(['src/js/presenter.js'])
         .pipe(concat('presenter.js'))
         .pipe(minify())
-        .pipe(gulp.dest('src/build/js/'));
+        .pipe(gulp.dest('dist/presenter/js/'));
 });
-gulp.task('default', ['pack-less', 'pack-js']);
+
+gulp.task('default', ['pack-less', 'pack-css-libraries','presenterjs-libraries', 'presenterjs-build']);
