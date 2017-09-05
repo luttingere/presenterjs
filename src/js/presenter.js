@@ -1,3 +1,8 @@
+/**
+ * @author Eduardo Luttinger , Emisael Carrera
+ *
+ * @constructor
+ */
 function PresenterJS() {
 }
 
