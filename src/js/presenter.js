@@ -144,7 +144,7 @@ PresenterJS.prototype.prepareTheElementForTheNextStep = function (stepElement, s
     if (step.drawOnTargetAtEnd) {
         stepElement.addClass(step.drawOnTargetAtEnd);
     }
-    PresenterJS.prototype.transformElementViewGroup(step, "remove");
+    //PresenterJS.prototype.transformElementViewGroup(step, "remove");
 }
 /**
  *
@@ -188,6 +188,7 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
 
     //this add the required style to the view group that belong to the step
     PresenterJS.prototype.transformElementViewGroup(step, "add");
+    PresenterJS.prototype.transformElementViewGroup(step, "remove");
 
     // add the click functionality to the presenter
     PresenterJS.prototype.setClickFunctionalityToThePresenter(presenter, stepElement, step);
