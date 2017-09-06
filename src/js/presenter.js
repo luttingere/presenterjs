@@ -529,8 +529,10 @@ PresenterJS.prototype.initPresenter = function (stepsArray) {
 PresenterJS.prototype.runShowCase = function () {
     $('body').append(PresenterJS.prototype.defaultTemplate);
     $('body').css({"overflow": "hidden"});
-    $('body').find("#guide-bg").addClass(steps['prepare'].class);
+
     var guideBg = $('body').find("#guide-bg");
+    guideBg.addClass(steps['prepare'].class);
+
     var guideBgDuration = css_time_to_milliseconds(guideBg.css('transition-duration'));
     if(!guideBgDuration){
         guideBgDuration = 1000;
