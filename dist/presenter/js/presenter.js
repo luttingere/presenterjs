@@ -256,7 +256,16 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     presenterPadding = Number(presenterPadding.replace('px', '')) * 2;
     var initialTopPosition = element.offset().top - element.position().top;
     var initialLeftPosition = element.offset().left - element.position().left;
-    var marginFix = 30;
+
+    var marginTopFix = 30;
+    var marginLeftFix = 30;
+    if(elementWidth <= marginLeftFix + 10){
+        marginLeftFix = 0;
+    }
+    if(elementHeight <= marginTopFix + 10){
+        marginTopFix = 0;
+    }
+
 
     console.log("difference.height: " + difference.height + " difference.width: " + difference.width);
     console.log("elementHeight: " + elementHeight + " elementWidth: " + elementWidth);
@@ -274,20 +283,20 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (elementHeight + presenterPadding - marginFix));
+                    presenterPosition.top = (initialTopPosition - (elementHeight + presenterPadding - marginTopFix));
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition + (marginFix));
+                    presenterPosition.top = (initialTopPosition + (marginTopFix));
                     break;
             }
             break;
         case "LEFT_TOP":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition + (marginFix));
+                    presenterPosition.left = (initialLeftPosition + (marginLeftFix));
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginFix));
+                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginLeftFix));
                     break;
             }
             switch (alignVertical) {
@@ -310,25 +319,25 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (elementHeight + marginFix));
+                    presenterPosition.top = (initialTopPosition - (elementHeight + marginTopFix));
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition + (marginFix));
+                    presenterPosition.top = (initialTopPosition + (marginTopFix));
                     break;
             }
             break;
         case "RIGHT_TOP":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition);
+                    presenterPosition.left = (initialLeftPosition) + (elementWidth + marginLeftFix);
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition);
+                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding - marginLeftFix + fixedPoints));
                     break;
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition);
+                    presenterPosition.top = (initialTopPosition - (difference.height + presenterPadding + elementHeight - marginTopFix));
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition);
@@ -346,20 +355,20 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - marginFix);
+                    presenterPosition.top = (initialTopPosition - marginTopFix);
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition + (elementHeight + marginFix));
+                    presenterPosition.top = (initialTopPosition + (elementHeight + marginTopFix));
                     break;
             }
             break;
         case "LEFT_BOTTOM":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition + marginFix);
+                    presenterPosition.left = (initialLeftPosition + marginLeftFix);
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginFix));
+                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginLeftFix));
                     break;
             }
             switch (alignVertical) {
@@ -367,14 +376,14 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.top = (initialTopPosition);
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition + (elementHeight - presenterPadding - marginFix - fixedPoints));
+                    presenterPosition.top = (initialTopPosition + (elementHeight - presenterPadding - marginTopFix - fixedPoints));
                     break;
             }
             break;
         case"BOTTOM_RIGHT":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition + (elementWidth - marginFix - presenterPadding + fixedPoints));
+                    presenterPosition.left = (initialLeftPosition + (elementWidth - marginLeftFix - presenterPadding + fixedPoints));
                     break;
                 default:
                     presenterPosition.left = (initialLeftPosition - (difference.width + presenterPadding ));
@@ -385,7 +394,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.top = (initialTopPosition);
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition + (elementHeight + marginFix));
+                    presenterPosition.top = (initialTopPosition + (elementHeight + marginTopFix));
                     break;
             }
             break;

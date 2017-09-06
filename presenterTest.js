@@ -19,7 +19,7 @@ $(document).ready(function () {
             align_horizontal: "LEFT",
             align_vertical: "TOP",
             button: "GOT IT!",
-            indicatorPosition: "left-bottom",
+            indicatorPosition: "bottom-right",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "elevate",
             drawOnSelf: "",
@@ -74,17 +74,22 @@ $(document).ready(function () {
             align_horizontal: "LEFT",
             align_vertical: "BOTTOM",
             button: "GOT IT!",
+            auxButtonId:"",
             indicatorPosition: "top-right",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "",
             drawOnSelf: "",
             template: "",
-            nextStep: "step1",
+            nextStep: "end",
             kill: "",
             callback: function () {
             }
         },
-        end: {}
+        end: {
+            endFunction: function () {
+                
+            }
+        }
     };
 
     var presenterJs = new PresenterJS();
