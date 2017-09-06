@@ -46,9 +46,11 @@ PresenterJS.prototype.show = function (step) {
  * End the presenter
  */
 PresenterJS.prototype.endPresenter = function (endStep) {
-    $.each(steps, function (index, value) {
-        PresenterJS.prototype.deleteStepTraces(value);
-    });
+    for (var step in PresenterJS.prototype.steps) {
+        if (step.indexOf("step") >= 0){
+            PresenterJS.prototype.deleteStepTraces(PresenterJS.prototype.steps[step]);
+        }
+    }
     $("#guide-bg").remove();
     $('#guide-dialogue-box').remove();
     if (endStep.callback) {
@@ -224,9 +226,9 @@ PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter,
                 auxButton.on("click", function () {
                     PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
                     if (step.nextStep == 'end') {
-                        PresenterJS.prototype.endPresenter(steps[step.nextStep], step);
+                        PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[step.nextStep], step);
                     } else {
-                        PresenterJS.prototype.show(steps[step.nextStep]);
+                        PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
                     }
                 });
             }
@@ -238,9 +240,9 @@ PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter,
         presenterBtn.on("click", function () {
             PresenterJS.prototype.onStepEnd(step, stepElement, presenter);
             if (step.nextStep == 'end') {
-                PresenterJS.prototype.endPresenter(steps[step.nextStep], step);
+                PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[step.nextStep], step);
             } else {
-                PresenterJS.prototype.show(steps[step.nextStep]);
+                PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
             }
         });
     }
@@ -310,11 +312,11 @@ PresenterJS.prototype.killAPreviousStep = function (step) {
         var stepToKill = null;
         if (Array.isArray(step.kill)) {
             step.kill.forEach(function (step) {
-                stepToKill = steps[step];
+                stepToKill = PresenterJS.prototype.steps[step];
                 PresenterJS.prototype.deleteStepTraces(stepToKill);
             });
         } else {
-            stepToKill = steps[step.kill];
+            stepToKill = PresenterJS.prototype.steps[step.kill];
             PresenterJS.prototype.deleteStepTraces(stepToKill);
         }
     }
@@ -526,7 +528,7 @@ PresenterJS.prototype.getDifferenceBetweenThePresenterAndTheElement = function (
  * @param stepsArray
  */
 PresenterJS.prototype.initPresenter = function (stepsArray) {
-    steps = stepsArray;
+    PresenterJS.prototype.steps = stepsArray;
 }
 
 /**
@@ -537,7 +539,7 @@ PresenterJS.prototype.runShowCase = function () {
     $('body').css({"overflow": "hidden"});
 
     var guideBg = $('body').find("#guide-bg");
-    guideBg.addClass(steps['prepare'].class);
+    guideBg.addClass(PresenterJS.prototype.steps['prepare'].class);
 
     var guideBgDuration = css_time_to_milliseconds(guideBg.css('transition-duration'));
     if (!guideBgDuration) {
@@ -557,7 +559,7 @@ PresenterJS.prototype.runShowCase = function () {
 
             var productName = guideBg.find("#productName");
 
-            if (!steps['prepare'].productName) {
+            if (!PresenterJS.prototype.steps['prepare'].productName) {
                 productName.css("display", "none");
             } else {
                 productName.html(steps['prepare'].productName);
@@ -565,7 +567,7 @@ PresenterJS.prototype.runShowCase = function () {
 
             var initMessage = guideBg.find("#message");
 
-            if (!steps['prepare'].message) {
+            if (!PresenterJS.prototype.steps['prepare'].message) {
                 initMessage.css("display", "none");
             } else {
                 initMessage.html(steps['prepare'].message);
@@ -584,7 +586,7 @@ PresenterJS.prototype.runShowCase = function () {
 
                 setTimeout(function () {
                     PresenterJS.prototype.show(steps['step1']);
-                }, steps['step1'].delay);
+                }, PresenterJS.prototype.steps['step1'].delay);
 
             }, guideMsgDuration);
 
