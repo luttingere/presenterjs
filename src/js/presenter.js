@@ -562,7 +562,7 @@ PresenterJS.prototype.runShowCase = function () {
             if (!PresenterJS.prototype.steps['prepare'].productName) {
                 productName.css("display", "none");
             } else {
-                productName.html(steps['prepare'].productName);
+                productName.html(PresenterJS.prototype.steps['prepare'].productName);
             }
 
             var initMessage = guideBg.find("#message");
@@ -570,7 +570,7 @@ PresenterJS.prototype.runShowCase = function () {
             if (!PresenterJS.prototype.steps['prepare'].message) {
                 initMessage.css("display", "none");
             } else {
-                initMessage.html(steps['prepare'].message);
+                initMessage.html(PresenterJS.prototype.steps['prepare'].message);
             }
 
             setTimeout(function () {
@@ -585,7 +585,7 @@ PresenterJS.prototype.runShowCase = function () {
                 guideBg.removeClass('show');
 
                 setTimeout(function () {
-                    PresenterJS.prototype.show(steps['step1']);
+                    PresenterJS.prototype.show(PresenterJS.prototype.steps['step1']);
                 }, PresenterJS.prototype.steps['step1'].delay);
 
             }, guideMsgDuration);
