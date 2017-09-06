@@ -6,16 +6,16 @@ $(document).ready(function () {
 
     var steps = {
         prepare: {
-            template: "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"productName\" class=\"product-name\"></span><span id=\"message\"></span></div></div></div>",
             productName: "PresenterJS",
-            message: "A cool tool to explain ur apps step by step"
+            message: "A cool tool to explain ur apps step by step",
+            class:""
         },
         step1: {
             id: "step1",
             groupClass:"elevate",
             title: "1",
-            text: "Location: RIGHT_TOP, align_horizontal: LEFT   align_vertical:  TOP",
-            position: "RIGHT_TOP",
+            text: "Location: RIGHT_BOTTOM, align_horizontal: LEFT   align_vertical:  TOP",
+            position: "RIGHT_BOTTOM",
             align_horizontal: "LEFT",
             align_vertical: "TOP",
             button: "GOT IT!",
@@ -33,8 +33,8 @@ $(document).ready(function () {
         step2: {
             id: "step1",
             title: "2",
-            text: "Location: RIGHT_TOP, align_horizontal: RIGHT   align_vertical:  TOP",
-            position: "RIGHT_TOP",
+            text: "Location: RIGHT_BOTTOM, align_horizontal: RIGHT   align_vertical:  TOP",
+            position: "RIGHT_BOTTOM",
             align_horizontal: "RIGHT",
             align_vertical: "TOP",
             button: "GOT IT!",
@@ -51,8 +51,8 @@ $(document).ready(function () {
         step3: {
             id: "step1",
             title: "3",
-            text: "Location: RIGHT_TOP, align_horizontal: RIGHT   align_vertical:  BOTTOM",
-            position: "RIGHT_TOP",
+            text: "Location: RIGHT_BOTTOM, align_horizontal: RIGHT   align_vertical:  BOTTOM",
+            position: "RIGHT_BOTTOM",
             button: "GOT IT!",
             align_horizontal: "RIGHT",
             align_vertical: "BOTTOM",
@@ -69,25 +69,25 @@ $(document).ready(function () {
         step4: {
             id: "step1",
             title: "4",
-            text: "Location: RIGHT_TOP, align_horizontal: LEFT   align_vertical:  BOTTOM",
-            position: "RIGHT_TOP",
+            text: "Location: RIGHT_BOTTOM, align_horizontal: LEFT   align_vertical:  BOTTOM",
+            position: "RIGHT_BOTTOM",
             align_horizontal: "LEFT",
             align_vertical: "BOTTOM",
             button: "GOT IT!",
-            auxButtonId:"",
+            auxButton:"",
             indicatorPosition: "top-right",
             drawOnTargetAtStart: "elevate",
             drawOnTargetAtEnd: "",
             drawOnSelf: "",
             template: "",
-            nextStep: "end",
+            nextStep: "step1",
             kill: "",
             callback: function () {
             }
         },
         end: {
-            endFunction: function () {
-                
+            callback: function () {
+
             }
         }
     };

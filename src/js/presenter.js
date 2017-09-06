@@ -7,6 +7,7 @@ function PresenterJS() {
 }
 
 PresenterJS.prototype.steps = null;
+PresenterJS.prototype.defaultTemplate = "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"productName\" class=\"product-name\"></span><span id=\"message\"></span></div></div></div>";
 PresenterJS.prototype.presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
 PresenterJS.prototype.presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
     "<div class=\"dialogue-content\"><div class=\"dialogue-img\"><img src=\"https://image.flaticon.com/icons/svg/288/288082.svg\">" +
@@ -41,6 +42,20 @@ PresenterJS.prototype.show = function (step) {
     this.onStepStart(step, stepElement, presenter);
 }
 
+/**
+ * End the presenter
+ */
+PresenterJS.prototype.endPresenter = function (endStep, lastStep) {
+    PresenterJS.prototype.deleteStepTraces(lastStep);
+    $("#guide-bg").remove();
+    $('#guide-dialogue-box').remove();
+    if (endStep.callback) {
+        console.log("Running Callback");
+        endStep.callback();
+    }
+    console.log("Bye PresenterJS");
+}
+
 
 /**
  *
@@ -56,6 +71,7 @@ PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
     var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
     //PresenterJS.prototype.adjustScreenScroll(stepElement);
+    console.log("presenterPosition: ", presenterPosition);
     PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
 }
 
@@ -83,7 +99,7 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
  * @param presenterPosition
  */
 PresenterJS.prototype.adjustScreenScroll = function (element) {
-   // $(window).scrollTo(0, element.offset().top);
+    // $(window).scrollTo(0, element.offset().top);
 }
 
 /**
@@ -126,6 +142,7 @@ PresenterJS.prototype.prepareTheElementForTheNextStep = function (stepElement, s
     if (step.drawOnTargetAtEnd) {
         stepElement.addClass(step.drawOnTargetAtEnd);
     }
+    PresenterJS.prototype.transformElementViewGroup(step, "remove");
 }
 /**
  *
@@ -168,31 +185,11 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
     }
 
     //this add the required style to the view group that belong to the step
-    if (step.classesActions && step.classesActions.length > 0) {
-        step.classesActions.forEach(function (element) {
-            if (element.className) {
-                var elementHtml = $('body').find('.' + element.className);
-                if (elementHtml != undefined) {
-                    elementHtml.removeClass(element.classesToRemove);
-                    elementHtml.addClass(element.classesToAdd);
-                }
-            }
-        });
-    }
+    PresenterJS.prototype.transformElementViewGroup(step, "add");
 
-    //sadd functionality to the button of the presenter
-    var presenterBtn = presenter.find('#dialogue-btn')
-    if (!step.button) {
-        presenterBtn.addClass("hide");
-    } else {
-        presenterBtn.removeClass("hide");
-        presenterBtn.html(step.button);
-        presenterBtn.off("click");
-        presenterBtn.on("click", function () {
-            PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
-            PresenterJS.prototype.show(steps[step.nextStep]);
-        });
-    }
+    // add the click functionality to the presenter
+    PresenterJS.prototype.setClickFunctionalityToThePresenter(presenter, stepElement, step);
+
     //add the the step title
     presenter.find('#presenter_title').html(step.title);
     //add the step message
@@ -207,31 +204,112 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
 
 /**
  *
+ * @param presenter
+ * @param step
+ */
+PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter, stepElement, step) {
+    //sadd functionality to the button of the presenter
+    var presenterBtn = presenter.find('#dialogue-btn')
+    if (!step.button) {
+        console.log("Agregandole la funcionalidad click al boton");
+        presenterBtn.addClass("hide");
+        if (!step.auxButton && step.auxButton != "") {
+            var auxButton = $('body').find("#" + step.auxButton);
+            if (auxButton.html() != undefined) {
+                auxButton.on("click", function () {
+                    PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
+                    if (step.nextStep == 'end') {
+                        PresenterJS.prototype.endPresenter(steps[step.nextStep], step);
+                    } else {
+                        PresenterJS.prototype.show(steps[step.nextStep]);
+                    }
+                });
+            }
+        }
+    } else {
+        presenterBtn.removeClass("hide");
+        presenterBtn.html(step.button);
+        presenterBtn.off("click");
+        presenterBtn.on("click", function () {
+            PresenterJS.prototype.onStepEnd(step, stepElement, presenter);
+            if (step.nextStep == 'end') {
+                PresenterJS.prototype.endPresenter(steps[step.nextStep], step);
+            } else {
+                PresenterJS.prototype.show(steps[step.nextStep]);
+            }
+        });
+    }
+}
+
+/**
+ *
+ * @param action
+ * @param step
+ */
+PresenterJS.prototype.transformElementViewGroup = function (step, action) {
+    if (step.classesActions != null && classesActions != "") {
+        if (Array.is(step.classesActions)) {
+            step.classesActions.forEach(function (element) {
+                if (element.className) {
+                    var elementHtml = $('body').find('.' + element.className);
+                    if (elementHtml != undefined) {
+                        switch (action) {
+                            case "remove":
+                                elementHtml.removeClass(element.classesToRemove);
+                                break;
+                            default:
+                                elementHtml.addClass(element.classesToAdd);
+                                break;
+                        }
+                    }
+                }
+            });
+        }
+    }
+}
+
+/**
+ *
+ * Delete all changes made by a step over the DOM
+ *
+ * @param action
+ * @param step
+ */
+PresenterJS.prototype.deleteStepTraces = function (step) {
+    var elementView = $('body').find("#" + step.id);
+    if (elementView.html() != undefined) {
+        elementView.removeClass(step.drawOnTargetAtStart);
+        elementView.removeClass(step.drawOnTargetAtEnd);
+    }
+    if (step.classesActions != null && classesActions != "") {
+        if (Array.is(step.classesActions)) {
+            step.classesActions.forEach(function (element) {
+                if (element.className) {
+                    var elementHtml = $('body').find('.' + element.className);
+                    if (elementHtml != undefined) {
+                        elementHtml.removeClass(element.classesToAdd);
+                    }
+                }
+            });
+        }
+    }
+}
+
+/**
+ * Kill an step still living if the step have the directive
  * @param step
  */
 PresenterJS.prototype.killAPreviousStep = function (step) {
-    // Kill an step still living if the step have the directive
     if (step.kill != null && step.kill != "") {
-        var stepToKill = steps[step.kill];
-        if (stepToKill != null) {
-            var lastStepAlive = $('body').find('#' + stepToKill.id);
-            if (lastStepAlive.html() != undefined) {
-                lastStepAlive.removeClass(steps[step.kill].drawOnTargetAtEnd);
-                if (stepToKill.group != null && stepToKill.group != "") {
-                    var stepViewGroup = $('body').find('.' + stepToKill.group);
-                    stepViewGroup.removeClass(stepToKill.groupClass);
-                }
-                if (stepToKill.classesActions && stepToKill.classesActions.length > 0) {
-                    stepToKill.classesActions.forEach(function (element) {
-                        if (element.className) {
-                            var elementHtml = $('body').find('.' + element.className);
-                            if (elementHtml != undefined) {
-                                elementHtml.removeClass(element.classesToAdd);
-                            }
-                        }
-                    });
-                }
-            }
+        var stepToKill = null;
+        if (Array.isArray(step.kill)) {
+            step.kill.forEach(function (step) {
+                stepToKill = steps[step];
+                PresenterJS.prototype.deleteStepTraces(stepToKill);
+            });
+        } else {
+            stepToKill = steps[step.kill];
+            PresenterJS.prototype.deleteStepTraces(stepToKill);
         }
     }
 }
@@ -259,10 +337,10 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
 
     var marginTopFix = 30;
     var marginLeftFix = 30;
-    if(elementWidth <= marginLeftFix + 10){
+    if (elementWidth <= marginLeftFix + 10) {
         marginLeftFix = 0;
     }
-    if(elementHeight <= marginTopFix + 10){
+    if (elementHeight <= marginTopFix + 10) {
         marginTopFix = 0;
     }
 
@@ -329,15 +407,15 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         case "RIGHT_TOP":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition) + (elementWidth + marginLeftFix);
+                    presenterPosition.left = (initialLeftPosition + marginLeftFix);
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding - marginLeftFix + fixedPoints));
+                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginLeftFix));
                     break;
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (difference.height + presenterPadding + elementHeight - marginTopFix));
+                    presenterPosition.top = (initialTopPosition - (elementHeight - presenterPadding));
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition);
@@ -401,10 +479,10 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         case"RIGHT_BOTTOM":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition);
+                    presenterPosition.left = (initialLeftPosition + (elementWidth + marginLeftFix));
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition);
+                    presenterPosition.left = (initialLeftPosition - (difference.width + marginLeftFix + presenterPadding));
                     break;
             }
             switch (alignVertical) {
@@ -412,7 +490,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.top = (initialTopPosition);
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition);
+                    presenterPosition.top = (initialTopPosition + (elementHeight - marginTopFix));
                     break;
             }
             break;
@@ -449,11 +527,9 @@ PresenterJS.prototype.initPresenter = function (stepsArray) {
  *
  */
 PresenterJS.prototype.runShowCase = function () {
-    var template = steps['prepare'].template;
-    $('body').append(template)
-    $('body').css({
-        "overflow": "hidden",
-    });
+    $('body').append(PresenterJS.prototype.defaultTemplate);
+    $('body').css({"overflow": "hidden"});
+    $('body').find("#guide-bg").addClass(steps['prepare'].class);
     setTimeout(function () {
         $('body').find("#guide-bg").addClass("show");
         setTimeout(function () {
