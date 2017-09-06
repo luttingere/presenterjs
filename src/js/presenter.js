@@ -284,8 +284,8 @@ PresenterJS.prototype.deleteStepTraces = function (step) {
         elementView.removeClass(step.drawOnTargetAtStart);
         elementView.removeClass(step.drawOnTargetAtEnd);
     }
-    if (step.classesActions != null && classesActions != "") {
-        if (Array.is(step.classesActions)) {
+    if (step.classesActions != null && step.classesActions != "") {
+        if (Array.isArray(step.classesActions)) {
             step.classesActions.forEach(function (element) {
                 if (element.className) {
                     var elementHtml = $('body').find('.' + element.className);
