@@ -80,14 +80,14 @@ $(document).ready(function () {
             drawOnTargetAtEnd: "",
             drawOnSelf: "",
             template: "",
-            nextStep: "step1",
+            nextStep: "end",
             kill: "",
             callback: function () {
             }
         },
         end: {
             callback: function () {
-
+                console.log("Finalizo el presentador");
             }
         }
     };
