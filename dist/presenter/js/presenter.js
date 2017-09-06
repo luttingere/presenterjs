@@ -7,6 +7,7 @@ function PresenterJS() {
 }
 
 PresenterJS.prototype.steps = null;
+PresenterJS.prototype.defaultTemplate = "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"productName\" class=\"product-name\"></span><span id=\"message\"></span></div></div></div>";
 PresenterJS.prototype.presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
 PresenterJS.prototype.presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
     "<div class=\"dialogue-content\"><div class=\"dialogue-img\"><img src=\"https://image.flaticon.com/icons/svg/288/288082.svg\">" +
@@ -41,6 +42,24 @@ PresenterJS.prototype.show = function (step) {
     this.onStepStart(step, stepElement, presenter);
 }
 
+/**
+ * End the presenter
+ */
+PresenterJS.prototype.endPresenter = function (endStep) {
+    for (var step in PresenterJS.prototype.steps) {
+        if (step.indexOf("step") >= 0){
+            PresenterJS.prototype.deleteStepTraces(PresenterJS.prototype.steps[step]);
+        }
+    }
+    $("#guide-bg").remove();
+    $('#guide-dialogue-box').remove();
+    if (endStep.callback) {
+        console.log("Running Callback");
+        endStep.callback();
+    }
+    console.log("Bye PresenterJS");
+}
+
 
 /**
  *
@@ -56,6 +75,7 @@ PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
     var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
     //PresenterJS.prototype.adjustScreenScroll(stepElement);
+    console.log("presenterPosition: ", presenterPosition);
     PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
 }
 
@@ -69,8 +89,10 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
     PresenterJS.prototype.prepareThePresenterForTheNextStep(step, stepElement, presenter);
     PresenterJS.prototype.prepareTheElementForTheNextStep(stepElement, step);
     //fire callback if it is set
-    if (step.callback) {
-        step.callback();
+    try {
+        eval(step.callback);
+    } catch (e) {
+        console.log(e);
     }
     //End of the step
 }
@@ -83,7 +105,7 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
  * @param presenterPosition
  */
 PresenterJS.prototype.adjustScreenScroll = function (element) {
-   // $(window).scrollTo(0, element.offset().top);
+    // $(window).scrollTo(0, element.offset().top);
 }
 
 /**
@@ -126,6 +148,7 @@ PresenterJS.prototype.prepareTheElementForTheNextStep = function (stepElement, s
     if (step.drawOnTargetAtEnd) {
         stepElement.addClass(step.drawOnTargetAtEnd);
     }
+    //PresenterJS.prototype.transformElementViewGroup(step, "remove");
 }
 /**
  *
@@ -168,31 +191,12 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
     }
 
     //this add the required style to the view group that belong to the step
-    if (step.classesActions && step.classesActions.length > 0) {
-        step.classesActions.forEach(function (element) {
-            if (element.className) {
-                var elementHtml = $('body').find('.' + element.className);
-                if (elementHtml != undefined) {
-                    elementHtml.removeClass(element.classesToRemove);
-                    elementHtml.addClass(element.classesToAdd);
-                }
-            }
-        });
-    }
+    PresenterJS.prototype.transformElementViewGroup(step, "add");
+    PresenterJS.prototype.transformElementViewGroup(step, "remove");
 
-    //sadd functionality to the button of the presenter
-    var presenterBtn = presenter.find('#dialogue-btn')
-    if (!step.button) {
-        presenterBtn.addClass("hide");
-    } else {
-        presenterBtn.removeClass("hide");
-        presenterBtn.html(step.button);
-        presenterBtn.off("click");
-        presenterBtn.on("click", function () {
-            PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
-            PresenterJS.prototype.show(steps[step.nextStep]);
-        });
-    }
+    // add the click functionality to the presenter
+    PresenterJS.prototype.setClickFunctionalityToThePresenter(presenter, stepElement, step);
+
     //add the the step title
     presenter.find('#presenter_title').html(step.title);
     //add the step message
@@ -207,31 +211,113 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
 
 /**
  *
+ * @param presenter
+ * @param step
+ */
+PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter, stepElement, step) {
+    //sadd functionality to the button of the presenter
+    var presenterBtn = presenter.find('#dialogue-btn')
+    if (!step.button) {
+        console.log("Agregandole la funcionalidad click al boton");
+        presenterBtn.addClass("hide");
+        if (step.auxButton && step.auxButton != "") {
+            var auxButton = $('body').find("#" + step.auxButton);
+            if (auxButton.html() != undefined) {
+                auxButton.on("click", function () {
+                    PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
+                    if (step.nextStep == 'end') {
+                        PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[step.nextStep], step);
+                    } else {
+                        PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
+                    }
+                });
+            }
+        }
+    } else {
+        presenterBtn.removeClass("hide");
+        presenterBtn.html(step.button);
+        presenterBtn.off("click");
+        presenterBtn.on("click", function () {
+            PresenterJS.prototype.onStepEnd(step, stepElement, presenter);
+            if (step.nextStep == 'end') {
+                PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[step.nextStep], step);
+            } else {
+                PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
+            }
+        });
+    }
+}
+
+/**
+ *
+ * @param action
+ * @param step
+ */
+PresenterJS.prototype.transformElementViewGroup = function (step, action) {
+    if (step.classesActions != null && step.classesActions != "") {
+        if (Array.isArray(step.classesActions)) {
+            step.classesActions.forEach(function (element) {
+                if (element.className) {
+                    var elementHtml = $('body').find('.' + element.className);
+                    if (elementHtml != undefined) {
+                        switch (action) {
+                            case "remove":
+                                elementHtml.removeClass(element.classesToRemove);
+                                break;
+                            default:
+                                elementHtml.addClass(element.classesToAdd);
+                                break;
+                        }
+                    }
+                }
+            });
+        }
+    }
+}
+
+/**
+ *
+ * Delete all changes made by a step over the DOM
+ *
+ * @param action
+ * @param step
+ */
+PresenterJS.prototype.deleteStepTraces = function (step) {
+    console.log("Limpiando el desastre del step " + step.id);
+    var elementView = $('body').find("#" + step.id);
+    if (elementView.html() != undefined) {
+        elementView.removeClass(step.drawOnTargetAtStart);
+        elementView.removeClass(step.drawOnTargetAtEnd);
+    }
+    if (step.classesActions != null && step.classesActions != "") {
+        if (Array.isArray(step.classesActions)) {
+            step.classesActions.forEach(function (element) {
+                if (element.className) {
+                    var elementHtml = $('body').find('.' + element.className);
+                    if (elementHtml != undefined) {
+                        elementHtml.removeClass(element.classesToAdd);
+                    }
+                }
+            });
+        }
+    }
+}
+
+/**
+ * Kill an step still living if the step have the directive
  * @param step
  */
 PresenterJS.prototype.killAPreviousStep = function (step) {
-    // Kill an step still living if the step have the directive
     if (step.kill != null && step.kill != "") {
-        var stepToKill = steps[step.kill];
-        if (stepToKill != null) {
-            var lastStepAlive = $('body').find('#' + stepToKill.id);
-            if (lastStepAlive.html() != undefined) {
-                lastStepAlive.removeClass(steps[step.kill].drawOnTargetAtEnd);
-                if (stepToKill.group != null && stepToKill.group != "") {
-                    var stepViewGroup = $('body').find('.' + stepToKill.group);
-                    stepViewGroup.removeClass(stepToKill.groupClass);
-                }
-                if (stepToKill.classesActions && stepToKill.classesActions.length > 0) {
-                    stepToKill.classesActions.forEach(function (element) {
-                        if (element.className) {
-                            var elementHtml = $('body').find('.' + element.className);
-                            if (elementHtml != undefined) {
-                                elementHtml.removeClass(element.classesToAdd);
-                            }
-                        }
-                    });
-                }
-            }
+        var stepToKill = null;
+        if (Array.isArray(step.kill)) {
+            step.kill.forEach(function (step) {
+                stepToKill = PresenterJS.prototype.steps[step];
+                PresenterJS.prototype.deleteStepTraces(stepToKill);
+            });
+        } else {
+            stepToKill = PresenterJS.prototype.steps[step.kill];
+            PresenterJS.prototype.deleteStepTraces(stepToKill);
         }
     }
 }
@@ -259,10 +345,10 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
 
     var marginTopFix = 30;
     var marginLeftFix = 30;
-    if(elementWidth <= marginLeftFix + 10){
+    if (elementWidth <= marginLeftFix + 10) {
         marginLeftFix = 0;
     }
-    if(elementHeight <= marginTopFix + 10){
+    if (elementHeight <= marginTopFix + 10) {
         marginTopFix = 0;
     }
 
@@ -329,15 +415,15 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         case "RIGHT_TOP":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition) + (elementWidth + marginLeftFix);
+                    presenterPosition.left = (initialLeftPosition + elementWidth + marginLeftFix);
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding - marginLeftFix + fixedPoints));
+                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginLeftFix));
                     break;
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (difference.height + presenterPadding + elementHeight - marginTopFix));
+                    presenterPosition.top = (initialTopPosition - (elementHeight - presenterPadding));
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition);
@@ -401,10 +487,10 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         case"RIGHT_BOTTOM":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition);
+                    presenterPosition.left = (initialLeftPosition + (elementWidth + marginLeftFix));
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition);
+                    presenterPosition.left = (initialLeftPosition - (difference.width + marginLeftFix + presenterPadding));
                     break;
             }
             switch (alignVertical) {
@@ -412,7 +498,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.top = (initialTopPosition);
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition);
+                    presenterPosition.top = (initialTopPosition + (elementHeight - marginTopFix));
                     break;
             }
             break;
@@ -442,36 +528,95 @@ PresenterJS.prototype.getDifferenceBetweenThePresenterAndTheElement = function (
  * @param stepsArray
  */
 PresenterJS.prototype.initPresenter = function (stepsArray) {
-    steps = stepsArray;
+    PresenterJS.prototype.steps = stepsArray;
 }
 
 /**
  *
  */
 PresenterJS.prototype.runShowCase = function () {
-    var template = steps['prepare'].template;
-    $('body').append(template)
-    $('body').css({
-        "overflow": "hidden",
-    });
+    $('body').append(PresenterJS.prototype.defaultTemplate);
+    $('body').css({"overflow": "hidden"});
+
+    var guideBg = $('body').find("#guide-bg");
+    guideBg.addClass(PresenterJS.prototype.steps['prepare'].class);
+
+    var guideBgDuration = css_time_to_milliseconds(guideBg.css('transition-duration'));
+    if (!guideBgDuration) {
+        guideBgDuration = 1000;
+    }
+
+    var guideMsg = $('body').find("#guide-message");
+    var guideMsgDuration = css_time_to_milliseconds(guideMsg.css('transition-duration'));
+    if (!guideMsgDuration) {
+        guideMsgDuration = 3000;
+    }
+
     setTimeout(function () {
-        $('body').find("#guide-bg").addClass("show");
+        guideBg.addClass("show");
         setTimeout(function () {
-            $('body').find("#guide-message").addClass("show");
-            $('body').find("#guide-bg").find("#productName").html(steps['prepare'].productName);
-            $('body').find("#guide-bg").find("#message").html(steps['prepare'].message);
+            guideMsg.addClass("show");
+
+            var productName = guideBg.find("#productName");
+
+            if (!PresenterJS.prototype.steps['prepare'].productName) {
+                productName.css("display", "none");
+            } else {
+                productName.html(PresenterJS.prototype.steps['prepare'].productName);
+            }
+
+            var initMessage = guideBg.find("#message");
+
+            if (!PresenterJS.prototype.steps['prepare'].message) {
+                initMessage.css("display", "none");
+            } else {
+                initMessage.html(PresenterJS.prototype.steps['prepare'].message);
+            }
 
             setTimeout(function () {
-
-                $('body').find("#guide-message").addClass("hide");
+                guideMsg.css({
+                    "-webkit-transition-duration": ".5s",
+                    "-moz-transition-duration": ".5s",
+                    "-ms-transition-duration": ".5s",
+                    "-o-transition-duration": ".5s",
+                    "transition-duration": ".5s"
+                });
+                guideMsg.addClass("hide");
+                guideBg.removeClass('show');
 
                 setTimeout(function () {
-                    PresenterJS.prototype.show(steps['step1']);
-                }, steps['step1'].delay);
+                    PresenterJS.prototype.show(PresenterJS.prototype.steps['step1']);
+                }, PresenterJS.prototype.steps['step1'].delay);
 
-            }, 1000);
+            }, guideMsgDuration);
 
-        }, 1000);
+        }, guideBgDuration);
 
     }, 100);
 }
+
+function css_time_to_milliseconds(time_string) {
+    var num = parseFloat(time_string, 10);
+    var unit = time_string.match(/m?s/);
+    var milliseconds;
+
+    if (unit) {
+        unit = unit[0];
+    }
+
+    switch (unit) {
+        case "s": // seconds
+            milliseconds = num * 1000;
+            break;
+        case "ms": // milliseconds
+            milliseconds = num;
+            break;
+        default:
+            milliseconds = 0;
+            break;
+    }
+
+    return milliseconds;
+}
+
+

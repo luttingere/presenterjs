@@ -47,7 +47,7 @@ PresenterJS.prototype.show = function (step) {
  */
 PresenterJS.prototype.endPresenter = function (endStep) {
     for (var step in PresenterJS.prototype.steps) {
-        if (step.indexOf("step") >= 0){
+        if (step.indexOf("step") >= 0) {
             PresenterJS.prototype.deleteStepTraces(PresenterJS.prototype.steps[step]);
         }
     }
@@ -289,14 +289,14 @@ PresenterJS.prototype.deleteStepTraces = function (step) {
         elementView.removeClass(step.drawOnTargetAtStart);
         elementView.removeClass(step.drawOnTargetAtEnd);
     }
-    if (step.classesActions != null && step.classesActions != "") {
+    if (step.classesActions && step.classesActions != "") {
+        console.log("Entro a quitar clases");
         if (Array.isArray(step.classesActions)) {
             step.classesActions.forEach(function (element) {
-                if (element.className) {
-                    var elementHtml = $('body').find('.' + element.className);
-                    if (elementHtml != undefined) {
-                        elementHtml.removeClass(element.classesToAdd);
-                    }
+                var elementHtml = $('body').find('.' + element.className);
+                if (elementHtml.html() != undefined) {
+                    console.log("Eliminando la clase " + element.classesToAdd);
+                    elementHtml.removeClass(element.classesToAdd);
                 }
             });
         }
@@ -562,7 +562,7 @@ PresenterJS.prototype.runShowCase = function () {
             if (!PresenterJS.prototype.steps['prepare'].productName) {
                 productName.css("display", "none");
             } else {
-                productName.html(steps['prepare'].productName);
+                productName.html(PresenterJS.prototype.steps['prepare'].productName);
             }
 
             var initMessage = guideBg.find("#message");
@@ -570,7 +570,7 @@ PresenterJS.prototype.runShowCase = function () {
             if (!PresenterJS.prototype.steps['prepare'].message) {
                 initMessage.css("display", "none");
             } else {
-                initMessage.html(steps['prepare'].message);
+                initMessage.html(PresenterJS.prototype.steps['prepare'].message);
             }
 
             setTimeout(function () {
@@ -585,7 +585,7 @@ PresenterJS.prototype.runShowCase = function () {
                 guideBg.removeClass('show');
 
                 setTimeout(function () {
-                    PresenterJS.prototype.show(steps['step1']);
+                    PresenterJS.prototype.show(PresenterJS.prototype.steps['step1']);
                 }, PresenterJS.prototype.steps['step1'].delay);
 
             }, guideMsgDuration);
