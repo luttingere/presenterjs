@@ -85,8 +85,10 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
     PresenterJS.prototype.prepareThePresenterForTheNextStep(step, stepElement, presenter);
     PresenterJS.prototype.prepareTheElementForTheNextStep(stepElement, step);
     //fire callback if it is set
-    if (step.callback) {
-        step.callback();
+    try{
+        eval(step.callback);
+    }catch (e){
+        console.log(e);
     }
     //End of the step
 }
@@ -247,8 +249,8 @@ PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter,
  * @param step
  */
 PresenterJS.prototype.transformElementViewGroup = function (step, action) {
-    if (step.classesActions != null && classesActions != "") {
-        if (Array.is(step.classesActions)) {
+    if (step.classesActions != null && step.classesActions != "") {
+        if (Array.isArray(step.classesActions)) {
             step.classesActions.forEach(function (element) {
                 if (element.className) {
                     var elementHtml = $('body').find('.' + element.className);
@@ -407,7 +409,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         case "RIGHT_TOP":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition + marginLeftFix);
+                    presenterPosition.left = (initialLeftPosition + elementWidth + marginLeftFix);
                     break;
                 default:
                     presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginLeftFix));
