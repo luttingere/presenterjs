@@ -83,7 +83,7 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
  * @param presenterPosition
  */
 PresenterJS.prototype.adjustScreenScroll = function (element) {
-   // $(window).scrollTo(0, element.offset().top);
+    // $(window).scrollTo(0, element.offset().top);
 }
 
 /**
@@ -454,25 +454,84 @@ PresenterJS.prototype.runShowCase = function () {
     $('body').css({
         "overflow": "hidden",
     });
+
+    var guideBg = $('body').find("#guide-bg");
+    var guideBgDuration = css_time_to_milliseconds(guideBg.css('transition-duration'));
+    if(!guideBgDuration){
+        guideBgDuration = 1000;
+    }
+
+    var guideMsg = $('body').find("#guide-message");
+    var guideMsgDuration = css_time_to_milliseconds(guideMsg.css('transition-duration'));
+    if(!guideMsgDuration){
+        guideMsgDuration = 3000;
+    }
+
     setTimeout(function () {
-        $('body').find("#guide-bg").addClass("show");
+        guideBg.addClass("show");
         setTimeout(function () {
-            $('body').find("#guide-message").addClass("show");
-            $('body').find("#guide-bg").find("#productName").html(steps['prepare'].productName);
-            $('body').find("#guide-bg").find("#message").html(steps['prepare'].message);
+            guideMsg.addClass("show");
+
+            var productName = guideBg.find("#productName");
+
+            if(!steps['prepare'].productName){
+                productName.css("display","none");
+            }else {
+                productName.html(steps['prepare'].productName);
+            }
+
+            var initMessage = guideBg.find("#message");
+
+            if(!steps['prepare'].message){
+                initMessage.css("display","none");
+            }else {
+                initMessage.html(steps['prepare'].message);
+            }
 
             setTimeout(function () {
-
-                $('body').find("#guide-message").addClass("hide");
+                guideMsg.css({
+                    "-webkit-transition-duration":".5s",
+                    "-moz-transition-duration":".5s",
+                    "-ms-transition-duration":".5s",
+                    "-o-transition-duration":".5s",
+                    "transition-duration":".5s"
+                });
+                guideMsg.addClass("hide");
+                guideBg.removeClass('show');
 
                 setTimeout(function () {
                     PresenterJS.prototype.show(steps['step1']);
-                    $('body').find("#guide-bg").removeClass('show');
                 }, steps['step1'].delay);
 
-            }, 1000);
+            }, guideMsgDuration);
 
-        }, 1000);
+        }, guideBgDuration);
 
     }, 100);
 }
+
+function css_time_to_milliseconds(time_string) {
+    var num = parseFloat(time_string, 10);
+    var unit = time_string.match(/m?s/);
+    var milliseconds;
+
+    if (unit) {
+        unit = unit[0];
+    }
+
+    switch (unit) {
+        case "s": // seconds
+            milliseconds = num * 1000;
+            break;
+        case "ms": // milliseconds
+            milliseconds = num;
+            break;
+        default:
+            milliseconds = 0;
+            break;
+    }
+
+    return milliseconds;
+}
+
+
