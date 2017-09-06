@@ -45,8 +45,10 @@ PresenterJS.prototype.show = function (step) {
 /**
  * End the presenter
  */
-PresenterJS.prototype.endPresenter = function (endStep, lastStep) {
-    PresenterJS.prototype.deleteStepTraces(lastStep);
+PresenterJS.prototype.endPresenter = function (endStep) {
+    $.each(steps, function (index, value) {
+        PresenterJS.prototype.deleteStepTraces(value);
+    });
     $("#guide-bg").remove();
     $('#guide-dialogue-box').remove();
     if (endStep.callback) {
@@ -85,9 +87,9 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
     PresenterJS.prototype.prepareThePresenterForTheNextStep(step, stepElement, presenter);
     PresenterJS.prototype.prepareTheElementForTheNextStep(stepElement, step);
     //fire callback if it is set
-    try{
+    try {
         eval(step.callback);
-    }catch (e){
+    } catch (e) {
         console.log(e);
     }
     //End of the step
@@ -216,7 +218,7 @@ PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter,
     if (!step.button) {
         console.log("Agregandole la funcionalidad click al boton");
         presenterBtn.addClass("hide");
-        if (!step.auxButton && step.auxButton != "") {
+        if (step.auxButton && step.auxButton != "") {
             var auxButton = $('body').find("#" + step.auxButton);
             if (auxButton.html() != undefined) {
                 auxButton.on("click", function () {
@@ -279,6 +281,7 @@ PresenterJS.prototype.transformElementViewGroup = function (step, action) {
  * @param step
  */
 PresenterJS.prototype.deleteStepTraces = function (step) {
+    console.log("Limpiando el desastre del step " + step.id);
     var elementView = $('body').find("#" + step.id);
     if (elementView.html() != undefined) {
         elementView.removeClass(step.drawOnTargetAtStart);
@@ -537,13 +540,13 @@ PresenterJS.prototype.runShowCase = function () {
     guideBg.addClass(steps['prepare'].class);
 
     var guideBgDuration = css_time_to_milliseconds(guideBg.css('transition-duration'));
-    if(!guideBgDuration){
+    if (!guideBgDuration) {
         guideBgDuration = 1000;
     }
 
     var guideMsg = $('body').find("#guide-message");
     var guideMsgDuration = css_time_to_milliseconds(guideMsg.css('transition-duration'));
-    if(!guideMsgDuration){
+    if (!guideMsgDuration) {
         guideMsgDuration = 3000;
     }
 
@@ -554,27 +557,27 @@ PresenterJS.prototype.runShowCase = function () {
 
             var productName = guideBg.find("#productName");
 
-            if(!steps['prepare'].productName){
-                productName.css("display","none");
-            }else {
+            if (!steps['prepare'].productName) {
+                productName.css("display", "none");
+            } else {
                 productName.html(steps['prepare'].productName);
             }
 
             var initMessage = guideBg.find("#message");
 
-            if(!steps['prepare'].message){
-                initMessage.css("display","none");
-            }else {
+            if (!steps['prepare'].message) {
+                initMessage.css("display", "none");
+            } else {
                 initMessage.html(steps['prepare'].message);
             }
 
             setTimeout(function () {
                 guideMsg.css({
-                    "-webkit-transition-duration":".5s",
-                    "-moz-transition-duration":".5s",
-                    "-ms-transition-duration":".5s",
-                    "-o-transition-duration":".5s",
-                    "transition-duration":".5s"
+                    "-webkit-transition-duration": ".5s",
+                    "-moz-transition-duration": ".5s",
+                    "-ms-transition-duration": ".5s",
+                    "-o-transition-duration": ".5s",
+                    "transition-duration": ".5s"
                 });
                 guideMsg.addClass("hide");
                 guideBg.removeClass('show');
