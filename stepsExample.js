@@ -5,11 +5,13 @@ var steps = {
     prepare: {
         productName: "PresenterJS",
         message: "A cool tool to explain ur apps step by step",
-        class:""
+        class: ""
     },
     step1: {
         id: "step1",
-        groupClass:"elevate",
+        classesActions: [
+            {className: "tetete1", classesToAdd: "tetete", classesToRemove: ""},
+        ],
         title: "1",
         text: "Location: RIGHT_BOTTOM, align_horizontal: LEFT   align_vertical:  TOP",
         position: "RIGHT_BOTTOM",
@@ -71,7 +73,7 @@ var steps = {
         align_horizontal: "LEFT",
         align_vertical: "BOTTOM",
         button: "GOT IT!",
-        auxButton:"",
+        auxButton: "",
         indicatorPosition: "top-right",
         drawOnTargetAtStart: "elevate",
         drawOnTargetAtEnd: "",
