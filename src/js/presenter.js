@@ -47,7 +47,7 @@ PresenterJS.prototype.show = function (step) {
  */
 PresenterJS.prototype.endPresenter = function (endStep) {
     for (var step in PresenterJS.prototype.steps) {
-        if (step.indexOf("step") >= 0) {
+        if (step.indexOf("step") >= 0){
             PresenterJS.prototype.deleteStepTraces(PresenterJS.prototype.steps[step]);
         }
     }
@@ -72,11 +72,12 @@ PresenterJS.prototype.endPresenter = function (endStep) {
 PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     //PresenterJS.prototype.registerToResizeEvent(step);
     PresenterJS.prototype.killAPreviousStep(step);
+    PresenterJS.prototype.setBodyScroll(step);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
-    if(step.position && step.position != ""){
-        var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
-        PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
-    }
+    var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
+    //PresenterJS.prototype.adjustScreenScroll(stepElement);
+    console.log("presenterPosition: ", presenterPosition);
+    PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
 }
 
 /**
@@ -95,6 +96,24 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
         console.log(e);
     }
     //End of the step
+
+    $('body').css({"overflow": "initial"});
+}
+
+
+
+/**
+ *
+ * @param stepElement
+ * @param presenter
+ * @param presenterPosition
+ */
+PresenterJS.prototype.setBodyScroll = function (step) {
+    if(step.scroll!=null && step.scroll==false){
+        $('body').css({"overflow": "hidden"});
+    }else {
+        $('body').css({"overflow": "initial"});
+    }
 }
 
 
@@ -289,14 +308,14 @@ PresenterJS.prototype.deleteStepTraces = function (step) {
         elementView.removeClass(step.drawOnTargetAtStart);
         elementView.removeClass(step.drawOnTargetAtEnd);
     }
-    if (step.classesActions && step.classesActions != "") {
-        console.log("Entro a quitar clases");
+    if (step.classesActions != null && step.classesActions != "") {
         if (Array.isArray(step.classesActions)) {
             step.classesActions.forEach(function (element) {
-                var elementHtml = $('body').find('.' + element.className);
-                if (elementHtml.html() != undefined) {
-                    console.log("Eliminando la clase " + element.classesToAdd);
-                    elementHtml.removeClass(element.classesToAdd);
+                if (element.className) {
+                    var elementHtml = $('body').find('.' + element.className);
+                    if (elementHtml != undefined) {
+                        elementHtml.removeClass(element.classesToAdd);
+                    }
                 }
             });
         }
@@ -505,6 +524,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     }
     return presenterPosition;
 }
+
 /**
  *
  * @param presenter
@@ -536,7 +556,6 @@ PresenterJS.prototype.initPresenter = function (stepsArray) {
  */
 PresenterJS.prototype.runShowCase = function () {
     $('body').append(PresenterJS.prototype.defaultTemplate);
-    $('body').css({"overflow": "hidden"});
 
     var guideBg = $('body').find("#guide-bg");
     guideBg.addClass(PresenterJS.prototype.steps['prepare'].class);
@@ -585,7 +604,7 @@ PresenterJS.prototype.runShowCase = function () {
                 guideBg.removeClass('show');
 
                 setTimeout(function () {
-                    PresenterJS.prototype.show(PresenterJS.prototype.steps['step1']);
+                    PresenterJS.prototype.show(steps['step1']);
                 }, PresenterJS.prototype.steps['step1'].delay);
 
             }, guideMsgDuration);
