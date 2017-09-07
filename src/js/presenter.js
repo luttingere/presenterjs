@@ -413,7 +413,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (presenter.height + presenterPadding + marginTopFix));
+                    presenterPosition.top = (initialTopPosition - (elementHeight - difference.height + presenterPadding + marginTopFix));
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition + (marginTopFix));
