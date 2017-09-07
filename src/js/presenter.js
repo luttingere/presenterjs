@@ -226,6 +226,11 @@ PresenterJS.prototype.transformThePresenter = function (presenter, step, stepEle
 
     // show the presenter transformed
     presenter.addClass("show");
+
+    //focus step input field
+    if(step.focusElement){
+        $("body").find("#"+step.focusElement).focus();
+    }
 }
 
 /**
@@ -463,7 +468,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.top = (initialTopPosition - marginTopFix);
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition + (elementHeight + marginTopFix));
+                    presenterPosition.top = (initialTopPosition + (elementHeight + marginTopFix)) - parseInt(element.css("margin-bottom"));
                     break;
             }
             break;
@@ -604,7 +609,7 @@ PresenterJS.prototype.runShowCase = function () {
                 guideBg.removeClass('show');
 
                 setTimeout(function () {
-                    PresenterJS.prototype.show(steps['step1']);
+                    PresenterJS.prototype.show(PresenterJS.prototype.steps['step1']);
                 }, PresenterJS.prototype.steps['step1'].delay);
 
             }, guideMsgDuration);
@@ -637,5 +642,3 @@ function css_time_to_milliseconds(time_string) {
 
     return milliseconds;
 }
-
-
