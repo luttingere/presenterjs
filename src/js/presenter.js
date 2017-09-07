@@ -7,7 +7,7 @@ function PresenterJS() {
 }
 
 PresenterJS.prototype.steps = null;
-PresenterJS.prototype.defaultTemplate = "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"productName\" class=\"product-name\"></span><span id=\"message\"></span></div></div></div>";
+PresenterJS.prototype.defaultTemplate = "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div></div>";
 PresenterJS.prototype.presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
 PresenterJS.prototype.presenterDefaultBody = "<div id=\"dialogue-indicator\"></div>" +
     "<div class=\"dialogue-content\"><div class=\"dialogue-img\"><img src=\"https://image.flaticon.com/icons/svg/288/288082.svg\">" +
@@ -388,14 +388,8 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     var initialTopPosition = element.offset().top - element.position().top;
     var initialLeftPosition = element.offset().left - element.position().left;
 
-    var marginTopFix = 30;
-    var marginLeftFix = 30;
-    if (elementWidth <= marginLeftFix + 10) {
-        marginLeftFix = 0;
-    }
-    if (elementHeight <= marginTopFix + 10) {
-        marginTopFix = 0;
-    }
+    var marginTopFix = 13;
+    var marginLeftFix = 13;
 
     console.log("difference.height: " + difference.height + " difference.width: " + difference.width);
     console.log("elementHeight: " + elementHeight + " elementWidth: " + elementWidth);
@@ -488,7 +482,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.top = (initialTopPosition - marginTopFix);
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition + (elementHeight + marginTopFix)) - parseInt(element.css("margin-bottom"));
+                    presenterPosition.top = (initialTopPosition + elementHeight + marginTopFix);
                     break;
             }
             break;
