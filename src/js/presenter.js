@@ -37,9 +37,19 @@ PresenterJS.prototype.getPresenterTemplate = function () {
  * @param step
  */
 PresenterJS.prototype.show = function (step) {
-    var stepElement = $('body').find('#' + step.id);
-    var presenter = PresenterJS.prototype.getPresenterInstance();
-    this.onStepStart(step, stepElement, presenter);
+
+    var stepElement;
+
+    if(step.id){
+        stepElement = $('body').find('#' + step.id);
+    }
+
+    if(stepElement && (!stepElement.length || stepElement.css('display')=='none')) {
+        PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
+    }else {
+        var presenter = PresenterJS.prototype.getPresenterInstance();
+        this.onStepStart(step, stepElement, presenter);
+    }
 }
 
 /**
@@ -149,12 +159,13 @@ PresenterJS.prototype.registerToResizeEvent = function (step) {
  * @param step
  */
 PresenterJS.prototype.relocateThePresenterOnTheScreen = function (stepElement, presenter, presenterPosition) {
-    presenter.css({
-        "position": "absolute",
-        "left": stepElement.position().left + (presenterPosition.left),
-        "top": stepElement.position().top + (presenterPosition.top)
-    });
-
+    if(stepElement){
+        presenter.css({
+            "position": "absolute",
+            "left": stepElement.position().left + (presenterPosition.left),
+            "top": stepElement.position().top + (presenterPosition.top)
+        });
+    }
 }
 
 
@@ -176,8 +187,10 @@ PresenterJS.prototype.prepareTheElementForTheNextStep = function (stepElement, s
  * @param presenter
  */
 PresenterJS.prototype.prepareThePresenterForTheNextStep = function (step, stepElement, presenter) {
-    stepElement.removeClass(step.drawOnTargetAtStart);
-    presenter.removeClass(step.drawOnSelf);
+    if(stepElement){
+        stepElement.removeClass(step.drawOnTargetAtStart);
+        presenter.removeClass(step.drawOnSelf);
+    }
     presenter.find('#dialogue-indicator').removeClass(step.indicatorPosition);
     presenter.empty();
 }
@@ -192,8 +205,10 @@ PresenterJS.prototype.prepareThePresenterForTheNextStep = function (step, stepEl
 PresenterJS.prototype.transformThePresenter = function (presenter, step, stepElement) {
 
     //draw on the element in focus
-    stepElement.removeClass(step.drawOnTargetAtEnd);
-    stepElement.addClass(step.drawOnTargetAtStart);
+    if(stepElement){
+        stepElement.removeClass(step.drawOnTargetAtEnd);
+        stepElement.addClass(step.drawOnTargetAtStart);
+    }
 
     //draw on the presenter
     presenter.addClass(step.drawOnSelf);
@@ -354,10 +369,16 @@ PresenterJS.prototype.killAPreviousStep = function (step) {
  * @returns {{top: string, left: string}}
  */
 PresenterJS.prototype.calculateNextPositionForThePresenter = function (position, alignHorizontal, alignVertical, element, presenter) {
+
     var presenterPosition = {
         "top": "",
         "left": ""
     }
+
+    if(!element){
+        return presenterPosition;
+    }
+
     var fixedPoints = 1;
     var elementHeight = element.height();
     var elementWidth = element.width();
@@ -376,7 +397,6 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         marginTopFix = 0;
     }
 
-
     console.log("difference.height: " + difference.height + " difference.width: " + difference.width);
     console.log("elementHeight: " + elementHeight + " elementWidth: " + elementWidth);
     console.log("Presenter Height: " + presenter.height() + " Presenter Width: " + presenter.width());
@@ -393,7 +413,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (elementHeight + presenterPadding - marginTopFix));
+                    presenterPosition.top = (initialTopPosition - (presenter.height + presenterPadding + marginTopFix));
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition + (marginTopFix));
@@ -421,7 +441,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         case "TOP_RIGHT":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = (initialLeftPosition);
+                    presenterPosition.left = initialLeftPosition + difference.width;
                     break;
                 default:
                     presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width));
@@ -429,7 +449,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (elementHeight + marginTopFix));
+                    presenterPosition.top = (initialTopPosition - (presenter.height() + element.height() + marginTopFix + presenterPadding));
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition + (marginTopFix));
@@ -561,6 +581,8 @@ PresenterJS.prototype.initPresenter = function (stepsArray) {
  */
 PresenterJS.prototype.runShowCase = function () {
     $('body').append(PresenterJS.prototype.defaultTemplate);
+    $('body').css("overflow","hidden");
+    window.scrollTo(0,0);
 
     var guideBg = $('body').find("#guide-bg");
     guideBg.addClass(PresenterJS.prototype.steps['prepare'].class);
