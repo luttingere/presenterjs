@@ -5,7 +5,7 @@
  */
 function PresenterJS() {
 }
-
+PresenterJS.prototype.currentStep = null;
 PresenterJS.prototype.steps = null;
 PresenterJS.prototype.defaultTemplate = "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div></div>";
 PresenterJS.prototype.presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
@@ -30,6 +30,11 @@ PresenterJS.prototype.getPresenterTemplate = function () {
     return this.presenterDefaultTemplate;
 }
 
+PresenterJS.prototype.getCurrentStep = function () {
+    return this.currentStep;
+}
+
+
 /**
  *
  * start the step
@@ -37,6 +42,8 @@ PresenterJS.prototype.getPresenterTemplate = function () {
  * @param step
  */
 PresenterJS.prototype.show = function (step) {
+
+    this.currentStep = step;
 
     var stepElement;
 
@@ -50,6 +57,16 @@ PresenterJS.prototype.show = function (step) {
         var presenter = PresenterJS.prototype.getPresenterInstance();
         this.onStepStart(step, stepElement, presenter);
     }
+}
+
+/**
+ *
+ * start the step
+ *
+ * @param step
+ */
+PresenterJS.prototype.loadNextStep = function () {
+    PresenterJS.prototype.show(PresenterJS.prototype.steps[this.currentStep.nextStep]);
 }
 
 /**
