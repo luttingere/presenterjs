@@ -43,7 +43,7 @@ PresenterJS.prototype.getCurrentStep = function () {
  */
 PresenterJS.prototype.show = function (step) {
 
-    this.currentStep = step;
+    PresenterJS.prototype.currentStep = step;
 
     var stepElement;
 
@@ -66,7 +66,11 @@ PresenterJS.prototype.show = function (step) {
  * @param step
  */
 PresenterJS.prototype.loadNextStep = function () {
-    PresenterJS.prototype.show(PresenterJS.prototype.steps[this.currentStep.nextStep]);
+    if(PresenterJS.prototype.currentStep.nextStep == "end"){
+        PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[PresenterJS.prototype.currentStep.nextStep]);
+    }else {
+        PresenterJS.prototype.show(PresenterJS.prototype.steps[PresenterJS.prototype.currentStep.nextStep]);
+    }
 }
 
 /**
