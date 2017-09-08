@@ -647,6 +647,7 @@ PresenterJS.prototype.runShowCase = function () {
 
                 setTimeout(function () {
                     PresenterJS.prototype.show(PresenterJS.prototype.steps['step1']);
+                    window.scrollTo(0,0);
                 }, PresenterJS.prototype.steps['step1'].delay);
 
             }, guideMsgDuration);
