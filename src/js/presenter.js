@@ -388,8 +388,8 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     var initialTopPosition = element.offset().top - element.position().top;
     var initialLeftPosition = element.offset().left - element.position().left;
 
-    var marginTopFix = 13;
-    var marginLeftFix = 13;
+    var marginTopFix = 19;
+    var marginLeftFix = 19;
 
     console.log("difference.height: " + difference.height + " difference.width: " + difference.width);
     console.log("elementHeight: " + elementHeight + " elementWidth: " + elementWidth);
@@ -443,7 +443,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (presenter.height() + element.height() + marginTopFix + presenterPadding));
+                    presenterPosition.top = (initialTopPosition - (presenter.height() + elementHeight + marginTopFix));
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition + (marginTopFix));
