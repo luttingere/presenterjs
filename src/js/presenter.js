@@ -61,9 +61,8 @@ PresenterJS.prototype.show = function (step) {
 
 /**
  *
- * start the step
+ * invoke the next step
  *
- * @param step
  */
 PresenterJS.prototype.loadNextStep = function () {
     if(PresenterJS.prototype.currentStep.nextStep == "end"){
@@ -74,7 +73,7 @@ PresenterJS.prototype.loadNextStep = function () {
 }
 
 /**
- * End the presenter
+ * Ends the presenter
  */
 PresenterJS.prototype.endPresenter = function (endStep) {
     for (var step in PresenterJS.prototype.steps) {
@@ -94,7 +93,7 @@ PresenterJS.prototype.endPresenter = function (endStep) {
 
 /**
  *
- * the
+ * Event on 'Step' start
  *
  * @param step
  * @param stepElement
@@ -103,7 +102,6 @@ PresenterJS.prototype.endPresenter = function (endStep) {
 PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     //PresenterJS.prototype.registerToResizeEvent(step);
     PresenterJS.prototype.killAPreviousStep(step);
-    PresenterJS.prototype.setBodyScroll(step);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
     var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
     //PresenterJS.prototype.adjustScreenScroll(stepElement);
@@ -112,6 +110,8 @@ PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
 }
 
 /**
+ *
+ * Event on 'Step' start
  *
  * @param step
  * @param stepElement
@@ -129,33 +129,6 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
     //End of the step
 
     $('body').css({"overflow": "initial"});
-}
-
-
-
-/**
- *
- * @param stepElement
- * @param presenter
- * @param presenterPosition
- */
-PresenterJS.prototype.setBodyScroll = function (step) {
-    if(step.scroll!=null && step.scroll==false){
-        $('body').css({"overflow": "hidden"});
-    }else {
-        $('body').css({"overflow": "initial"});
-    }
-}
-
-
-/**
- *
- * @param stepElement
- * @param presenter
- * @param presenterPosition
- */
-PresenterJS.prototype.adjustScreenScroll = function (element) {
-    // $(window).scrollTo(0, element.offset().top);
 }
 
 /**
@@ -411,6 +384,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
 
     var marginTopFix = 19;
     var marginLeftFix = 19;
+    var indicatorMargin = 29;
 
     console.log("difference.height: " + difference.height + " difference.width: " + difference.width);
     console.log("elementHeight: " + elementHeight + " elementWidth: " + elementWidth);
@@ -456,7 +430,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
         case "TOP_RIGHT":
             switch (alignHorizontal) {
                 case "RIGHT":
-                    presenterPosition.left = initialLeftPosition + difference.width;
+                    presenterPosition.left = initialLeftPosition + element.outerWidth() - indicatorMargin * 2;
                     break;
                 default:
                     presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width));
@@ -486,6 +460,24 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition);
+                    break;
+            }
+            break;
+        case "RIGHT_MIDDLE":
+            switch (alignHorizontal) {
+                case "RIGHT":
+                    presenterPosition.left = (initialLeftPosition + elementWidth + marginLeftFix);
+                    break;
+                default:
+                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginLeftFix));
+                    break;
+            }
+            switch (alignVertical) {
+                case "TOP":
+                    presenterPosition.top = initialTopPosition - presenter.height() + indicatorMargin - elementHeight/2;
+                    break;
+                default:
+                    presenterPosition.top = initialTopPosition - indicatorMargin + elementHeight/2;
                     break;
             }
             break;
@@ -522,6 +514,24 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition + (elementHeight - presenterPadding - marginTopFix - fixedPoints));
+                    break;
+            }
+            break;
+        case "LEFT_MIDDLE":
+            switch (alignHorizontal) {
+                case "RIGHT":
+                    presenterPosition.left = (initialLeftPosition + marginLeftFix);
+                    break;
+                default:
+                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width + presenterPadding + marginLeftFix));
+                    break;
+            }
+            switch (alignVertical) {
+                case "TOP":
+                    presenterPosition.top = initialTopPosition - presenter.height() + indicatorMargin - elementHeight/2;
+                    break;
+                default:
+                    presenterPosition.top = initialTopPosition - indicatorMargin + elementHeight/2;
                     break;
             }
             break;
