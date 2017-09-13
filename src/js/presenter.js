@@ -81,20 +81,65 @@ PresenterJS.prototype.loadNextStep = function () {
  */
 PresenterJS.prototype.endingCall = false;
 PresenterJS.prototype.endPresenter = function (endStep) {
+
     if(!this.endingCall){
         this.endingCall = true;
+
+        var guideBG = $('#guide-bg');
+        var guideDialogue = $('#guide-dialogue-box');
+        var guideBgDuration = 0;
+
+        guideDialogue.addClass('hide transparent-simple');
+
+        guideBG.css({
+            "-webkit-transition-duration": "all 3s linear",
+            "-moz-transition-duration": "all 3s linear",
+            "-ms-transition-duration": "all 3s linear",
+            "-o-transition-duration": "all 3s linear",
+            "transition-duration": "all 3s linear"
+        });
+        guideDialogue.css({
+            "-webkit-transition-duration": "all 1.5s linear",
+            "-moz-transition-duration": "all 1.5s linear",
+            "-ms-transition-duration": "all 1.5s linear",
+            "-o-transition-duration": "all 1.5s linear",
+            "transition-duration": "all 1.5s linear"
+        });
+
+        if(guideBG.hasClass('hide')){
+            guideBgDuration = 3000;
+        }
+
         for (var step in PresenterJS.prototype.steps) {
             if (step.indexOf("step") >= 0){
                 PresenterJS.prototype.deleteStepTraces(PresenterJS.prototype.steps[step]);
             }
         }
-        $("#guide-bg").remove();
-        $('#guide-dialogue-box').remove();
-        if (endStep.callback) {
-            console.log("Running Callback");
-            endStep.callback();
-        }
-        console.log("Bye PresenterJS");
+
+        setTimeout(function(){
+            guideBG.remove();
+            $('#guide-dialogue-box').remove();
+            if (endStep.callback) {
+                console.log("Running Callback");
+                endStep.callback();
+            }
+            console.log("Bye PresenterJS");
+        },guideBgDuration);
+
+    }
+}
+
+/**
+ *
+ * @param stepElement
+ * @param presenter
+ * @param presenterPosition
+ */
+PresenterJS.prototype.setBodyScroll = function (step) {
+    if(step.scroll!=null && step.scroll==false){
+        $('body').css({"overflow": "hidden"});
+    }else {
+        $('body').css({"overflow": "initial"});
     }
 }
 
@@ -110,6 +155,7 @@ PresenterJS.prototype.endPresenter = function (endStep) {
 PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     //PresenterJS.prototype.registerToResizeEvent(step);
     PresenterJS.prototype.killAPreviousStep(step);
+    PresenterJS.prototype.setBodyScroll(step);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
     var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
     //PresenterJS.prototype.adjustScreenScroll(stepElement);
@@ -300,16 +346,14 @@ PresenterJS.prototype.transformElementViewGroup = function (step, action) {
         if (Array.isArray(step.classesActions)) {
             step.classesActions.forEach(function (element) {
                 if (element.className) {
+                    console.log(element.className);
                     var elementHtml = $('body').find('.' + element.className);
+                    console.log(elementHtml);
                     if (elementHtml != undefined) {
-                        switch (action) {
-                            case "remove":
-                                elementHtml.removeClass(element.classesToRemove);
-                                break;
-                            default:
-                                elementHtml.addClass(element.classesToAdd);
-                                break;
-                        }
+                        console.log("adding clasess: " + element.classesToAdd);
+                        console.log("removing clasess: " + element.classesToRemove);
+                        elementHtml.removeClass(element.classesToRemove);
+                        elementHtml.addClass(element.classesToAdd);
                     }
                 }
             });
@@ -383,8 +427,8 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     }
 
     var fixedPoints = 1;
-    var elementHeight = element.height();
-    var elementWidth = element.width();
+    var elementHeight = element.outerHeight();
+    var elementWidth = element.outerWidth();
     var difference = PresenterJS.prototype.getDifferenceBetweenThePresenterAndTheElement(presenter, element);
     var presenterPadding = presenter.css('padding');
     presenterPadding = Number(presenterPadding.replace('px', '')) * 2;
@@ -398,6 +442,8 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     console.log("difference.height: " + difference.height + " difference.width: " + difference.width);
     console.log("elementHeight: " + elementHeight + " elementWidth: " + elementWidth);
     console.log("Presenter Height: " + presenter.height() + " Presenter Width: " + presenter.width());
+
+    console.log("position:" + position);
 
     switch (position) {
         case "TOP_LEFT":
@@ -579,6 +625,10 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.top = (initialTopPosition + (elementHeight - marginTopFix));
                     break;
             }
+            break;
+        case "MIDDLE":
+            presenterPosition.left = element.outerWidth()/2 - presenter.outerWidth() / 2;
+            presenterPosition.top = element.outerHeight()/2 - presenter.outerHeight() / 2;
             break;
     }
     return presenterPosition;
