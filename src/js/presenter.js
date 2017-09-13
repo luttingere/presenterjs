@@ -65,29 +65,37 @@ PresenterJS.prototype.show = function (step) {
  *
  */
 PresenterJS.prototype.loadNextStep = function () {
-    if(PresenterJS.prototype.currentStep.nextStep == "end"){
-        PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[PresenterJS.prototype.currentStep.nextStep]);
+    if(PresenterJS.prototype.currentStep){
+        if(PresenterJS.prototype.currentStep.nextStep == "end"){
+            PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[PresenterJS.prototype.currentStep.nextStep]);
+        }else {
+            PresenterJS.prototype.show(PresenterJS.prototype.steps[PresenterJS.prototype.currentStep.nextStep]);
+        }
     }else {
-        PresenterJS.prototype.show(PresenterJS.prototype.steps[PresenterJS.prototype.currentStep.nextStep]);
+        console.log("There is no a step loaded");
     }
 }
 
 /**
  * Ends the presenter
  */
+PresenterJS.prototype.endingCall = false;
 PresenterJS.prototype.endPresenter = function (endStep) {
-    for (var step in PresenterJS.prototype.steps) {
-        if (step.indexOf("step") >= 0){
-            PresenterJS.prototype.deleteStepTraces(PresenterJS.prototype.steps[step]);
+    if(!this.endingCall){
+        this.endingCall = true;
+        for (var step in PresenterJS.prototype.steps) {
+            if (step.indexOf("step") >= 0){
+                PresenterJS.prototype.deleteStepTraces(PresenterJS.prototype.steps[step]);
+            }
         }
+        $("#guide-bg").remove();
+        $('#guide-dialogue-box').remove();
+        if (endStep.callback) {
+            console.log("Running Callback");
+            endStep.callback();
+        }
+        console.log("Bye PresenterJS");
     }
-    $("#guide-bg").remove();
-    $('#guide-dialogue-box').remove();
-    if (endStep.callback) {
-        console.log("Running Callback");
-        endStep.callback();
-    }
-    console.log("Bye PresenterJS");
 }
 
 
@@ -257,6 +265,7 @@ PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter,
             var auxButton = $('body').find("#" + step.auxButton);
             if (auxButton.html() != undefined) {
                 auxButton.on("click", function () {
+                    console.log("aux button click");
                     PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
                     if (step.nextStep == 'end') {
                         PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[step.nextStep], step);

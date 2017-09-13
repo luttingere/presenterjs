@@ -13,10 +13,17 @@ gulp.task('pack-css-libraries', function () {
         .pipe(minify())
         .pipe(gulp.dest('dist/presenter/css/'));
 });
-gulp.task('pack-less', function () {
+gulp.task('pack-all-less', function () {
     return gulp.src('src/style/less/*.less')
         .pipe(less())
-        .pipe(concat('presenter.css'))
+        .pipe(concat('style.example.css'))
+        .pipe(minify())
+        .pipe(gulp.dest('dist/presenter/css/'));
+});
+gulp.task('pack-presenter-less', function () {
+    return gulp.src('src/style/less/presenter.less')
+        .pipe(less())
+        .pipe(concat('presenter.min.css'))
         .pipe(minify())
         .pipe(gulp.dest('dist/presenter/css/'));
 });
@@ -33,4 +40,4 @@ gulp.task('presenterjs-build', function () {
         .pipe(gulp.dest('dist/presenter/js/'));
 });
 
-gulp.task('default', ['pack-less', 'pack-css-libraries','presenterjs-libraries', 'presenterjs-build']);
+gulp.task('default', ['pack-all-less', 'pack-presenter-less', 'pack-css-libraries','presenterjs-libraries', 'presenterjs-build']);
