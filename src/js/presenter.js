@@ -157,8 +157,8 @@ PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     PresenterJS.prototype.killAPreviousStep(step);
     PresenterJS.prototype.setBodyScroll(step);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
-    var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
     setTimeout(function(){
+        var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
         PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
     },150);
 }
