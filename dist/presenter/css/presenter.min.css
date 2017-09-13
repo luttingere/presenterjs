@@ -88,58 +88,58 @@ body.guide.dont-scroll {
   -ms-transform: translate(0, -2px) !important;
   -o-transform: translate(0, -2px) !important;
 }
-@-webkit-keyframes whitenkeys {
+@-webkit-keyframes opacity-fading {
   0% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
   50% {
-    color: #ffffff;
+    opacity: 1;
   }
   100% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
 }
-@-moz-keyframes whitenkeys {
+@-moz-keyframes opacity-fading {
   0% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
   50% {
-    color: #ffffff;
+    opacity: 1;
   }
   100% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
 }
-@-o-keyframes whitenkeys {
+@-o-keyframes opacity-fading {
   0% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
   50% {
-    color: #ffffff;
+    opacity: 1;
   }
   100% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
 }
-@keyframes whitenkeys {
+@keyframes opacity-fading {
   0% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
   50% {
-    color: #ffffff;
+    opacity: 1;
   }
   100% {
-    color: rgba(255, 255, 255, 0.4);
+    opacity: .4;
   }
 }
-.white-alert {
-  -webkit-animation: whitenkeys 1s infinite;
+.fading-alert {
+  -webkit-animation: "opacity-fading" 1s infinite;
   /* Safari 4+ */
-  -moz-animation: whitenkeys 1s infinite;
+  -moz-animation: "opacity-fading" 1s infinite;
   /* Fx 5+ */
-  -o-animation: whitenkeys 1s infinite;
+  -o-animation: "opacity-fading" 1s infinite;
   /* Opera 12+ */
-  animation: whitenkeys 1s infinite;
+  animation: "opacity-fading" 1s infinite;
   /* IE 10+, Fx 29+ */
 }
 #guide-bg {
@@ -249,6 +249,15 @@ body.guide.dont-scroll {
   margin-top: 20px;
   padding: 0 20px;
   margin-left: 0;
+}
+#guide-dialogue-box.transparent-simple {
+  box-shadow: none;
+  background: none;
+  border: none;
+  text-align: center;
+}
+#guide-dialogue-box.transparent-simple #dialogue-btn {
+  margin: 0 auto;
 }
 #dialogue-indicator {
   position: absolute;
