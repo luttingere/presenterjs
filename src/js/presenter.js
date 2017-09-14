@@ -16,7 +16,6 @@ PresenterJS.prototype.presenterDefaultBody = "<div id=\"dialogue-indicator\"></d
 
 
 PresenterJS.prototype.getPresenterInstance = function () {
-    console.log(this);
     var presenter = $('#guide-dialogue-box');
     if (presenter.html() == undefined) {
         $(this.presenterDefaultTemplate).appendTo($('body'));
@@ -117,8 +116,7 @@ PresenterJS.prototype.endPresenter = function (endStep) {
         }
 
         setTimeout(function(){
-            guideBG.remove();
-            $('#guide-dialogue-box').remove();
+            PresenterJS.prototype.destroyPresenterElements();
             if (endStep.callback) {
                 console.log("Running Callback");
                 endStep.callback();
@@ -128,6 +126,17 @@ PresenterJS.prototype.endPresenter = function (endStep) {
 
     }
 }
+
+/**
+ *
+ * Destroy all elements apended to the body by the Presenter
+ *
+ */
+PresenterJS.prototype.destroyPresenterElements = function () {
+    $('#guide-bg').remove();
+    $('#guide-dialogue-box').remove();
+}
+
 
 /**
  *
@@ -160,7 +169,7 @@ PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     setTimeout(function(){
         var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
         PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
-    },150);
+    },25);
 }
 
 /**
@@ -176,7 +185,7 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
     PresenterJS.prototype.prepareTheElementForTheNextStep(stepElement, step);
     //fire callback if it is set
     try {
-        eval(step.callback);
+        step.callback;
     } catch (e) {
         console.log(e);
     }
@@ -346,12 +355,8 @@ PresenterJS.prototype.transformElementViewGroup = function (step, action) {
         if (Array.isArray(step.classesActions)) {
             step.classesActions.forEach(function (element) {
                 if (element.className) {
-                    console.log(element.className);
                     var elementHtml = $('body').find('.' + element.className);
-                    console.log(elementHtml);
                     if (elementHtml != undefined) {
-                        console.log("adding clasess: " + element.classesToAdd);
-                        console.log("removing clasess: " + element.classesToRemove);
                         elementHtml.removeClass(element.classesToRemove);
                         elementHtml.addClass(element.classesToAdd);
                     }
@@ -438,12 +443,6 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     var marginTopFix = 19;
     var marginLeftFix = 19;
     var indicatorMargin = 29;
-
-    console.log("difference.height: " + difference.height + " difference.width: " + difference.width);
-    console.log("elementHeight: " + elementHeight + " elementWidth: " + elementWidth);
-    console.log("Presenter Height: " + presenter.height() + " Presenter Width: " + presenter.width());
-
-    console.log("position:" + position);
 
     switch (position) {
         case "TOP_LEFT":
@@ -657,6 +656,8 @@ PresenterJS.prototype.getDifferenceBetweenThePresenterAndTheElement = function (
  * @param stepsArray
  */
 PresenterJS.prototype.initPresenter = function (stepsArray) {
+    PresenterJS.prototype.destroyPresenterElements();
+    PresenterJS.prototype.endingCall = false;
     PresenterJS.prototype.steps = stepsArray;
 }
 
