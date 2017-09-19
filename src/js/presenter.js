@@ -6,6 +6,8 @@
 function PresenterJS() {
 }
 PresenterJS.prototype.currentStep = null;
+PresenterJS.prototype.stepElement = null;
+PresenterJS.prototype.presenterDialogueBox = null;
 PresenterJS.prototype.steps = null;
 PresenterJS.prototype.defaultTemplate = "<div id=\"guide-bg\"><div id=\"guide-message\"><div id=\"message-container\"><span id=\"message\"></span><span id=\"productName\" class=\"product-name\"></span></div></div></div>";
 PresenterJS.prototype.presenterDefaultTemplate = "<div id=\"guide-dialogue-box\"></div>";
@@ -53,6 +55,7 @@ PresenterJS.prototype.show = function (step) {
     if(stepElement && (!stepElement.length || stepElement.css('display')=='none')) {
         PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
     }else {
+        PresenterJS.prototype.stepElement = stepElement;
         var presenter = PresenterJS.prototype.getPresenterInstance();
         this.onStepStart(step, stepElement, presenter);
     }
@@ -64,7 +67,11 @@ PresenterJS.prototype.show = function (step) {
  *
  */
 PresenterJS.prototype.loadNextStep = function () {
+
+    PresenterJS.prototype.onStepEnd(this.currentStep, this.stepElement, PresenterJS.prototype.getPresenterInstance());
+
     if(PresenterJS.prototype.currentStep){
+        console.log("Loading next step: " + PresenterJS.prototype.currentStep.nextStep);
         if(PresenterJS.prototype.currentStep.nextStep == "end"){
             PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[PresenterJS.prototype.currentStep.nextStep]);
         }else {
@@ -185,7 +192,7 @@ PresenterJS.prototype.onStepEnd = function (step, stepElement, presenter) {
     PresenterJS.prototype.prepareTheElementForTheNextStep(stepElement, step);
     //fire callback if it is set
     try {
-        step.callback;
+        step.callback();
     } catch (e) {
         console.log(e);
     }
@@ -321,12 +328,7 @@ PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter,
             if (auxButton.html() != undefined) {
                 auxButton.on("click", function () {
                     console.log("aux button click");
-                    PresenterJS.prototype.onStepEnd(step, stepElement, presenter)
-                    if (step.nextStep == 'end') {
-                        PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[step.nextStep], step);
-                    } else {
-                        PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
-                    }
+                    PresenterJS.prototype.loadNextStep();
                 });
             }
         }
@@ -335,15 +337,12 @@ PresenterJS.prototype.setClickFunctionalityToThePresenter = function (presenter,
         presenterBtn.html(step.button);
         presenterBtn.off("click");
         presenterBtn.on("click", function () {
-            PresenterJS.prototype.onStepEnd(step, stepElement, presenter);
-            if (step.nextStep == 'end') {
-                PresenterJS.prototype.endPresenter(PresenterJS.prototype.steps[step.nextStep], step);
-            } else {
-                PresenterJS.prototype.show(PresenterJS.prototype.steps[step.nextStep]);
-            }
+            PresenterJS.prototype.loadNextStep();
         });
     }
 }
+
+
 
 /**
  *
@@ -451,7 +450,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.left = (initialLeftPosition);
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width));
+                    presenterPosition.left = initialLeftPosition - presenter.width() + marginLeftFix;
                     break;
             }
             switch (alignVertical) {
