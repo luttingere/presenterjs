@@ -151,12 +151,18 @@ PresenterJS.prototype.destroyPresenterElements = function () {
  * @param presenter
  * @param presenterPosition
  */
-PresenterJS.prototype.setBodyScroll = function (step) {
+PresenterJS.prototype.setBodyScroll = function (step, focusElement) {
     if(step.scroll!=null && step.scroll==false){
         $('body').css({"overflow": "hidden"});
     }else {
         $('body').css({"overflow": "initial"});
     }
+
+    var body = $("html, body");
+
+    var scrollPos = this.stepElement.offset().top - $(window).height()/2 + this.stepElement.height()/2;
+
+    body.stop().animate({scrollTop:scrollPos}, 1000, 'swing');
 }
 
 
@@ -171,7 +177,7 @@ PresenterJS.prototype.setBodyScroll = function (step) {
 PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     //PresenterJS.prototype.registerToResizeEvent(step);
     PresenterJS.prototype.killAPreviousStep(step);
-    PresenterJS.prototype.setBodyScroll(step);
+    PresenterJS.prototype.setBodyScroll(step, stepElement);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
     setTimeout(function(){
         var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
