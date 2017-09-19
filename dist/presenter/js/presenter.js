@@ -160,9 +160,10 @@ PresenterJS.prototype.setBodyScroll = function (step, focusElement) {
 
     var body = $("html, body");
 
-    var scrollPos = this.stepElement.offset().top - $(window).height()/2 + this.stepElement.height()/2;
-
-    body.stop().animate({scrollTop:scrollPos}, 1000, 'swing');
+    if(step.autoScroll){
+        var scrollPos = this.stepElement.offset().top - $(window).height()/2 + this.stepElement.height()/2;
+        body.stop().animate({scrollTop:scrollPos}, 1000, 'swing');
+    }
 }
 
 
