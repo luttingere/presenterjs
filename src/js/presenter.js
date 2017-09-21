@@ -189,10 +189,21 @@ PresenterJS.prototype.onStepStart = function (step, stepElement, presenter) {
     PresenterJS.prototype.killAPreviousStep(step);
     PresenterJS.prototype.setBodyScroll(step, stepElement);
     PresenterJS.prototype.transformThePresenter(presenter, step, stepElement);
-    setTimeout(function(){
-        var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
-        PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
-    },25);
+    updatePresenterPosition(step, stepElement, presenter);
+
+    $(document).scroll(function(){
+        updatePresenterPosition(step, stepElement, presenter);
+    })
+
+    $(window).resize(function(){
+        updatePresenterPosition(step, stepElement, presenter);
+    })
+}
+
+function updatePresenterPosition(step, stepElement, presenter){
+    console.log('updating the position');
+    var presenterPosition = PresenterJS.prototype.calculateNextPositionForThePresenter(step.position, step.align_horizontal, step.align_vertical, stepElement, presenter);
+    PresenterJS.prototype.relocateThePresenterOnTheScreen(stepElement, presenter, presenterPosition);
 }
 
 /**
