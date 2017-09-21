@@ -160,8 +160,17 @@ PresenterJS.prototype.setBodyScroll = function (step, focusElement) {
 
     var body = $("html, body");
 
-    if(step.autoScroll){
-        var scrollPos = this.stepElement.offset().top - $(window).height()/2 + this.stepElement.height()/2;
+    if(this.stepElement && (step.autoScroll == null || step.autoScroll == true)){
+
+        var scrollPos;
+
+        if(this.stepElement.height() < $(window).height()/2){
+            scrollPos = this.stepElement.offset().top - $(window).height()/2 + this.stepElement.height()/2;
+        }else {
+            console.log('element is greater than screen mid height');
+            scrollPos = this.stepElement.offset().top - $(window).height()/3;
+        }
+
         body.stop().animate({scrollTop:scrollPos}, 1000, 'swing');
     }
 }
@@ -446,8 +455,8 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
     var initialTopPosition = element.offset().top - element.position().top;
     var initialLeftPosition = element.offset().left - element.position().left;
 
-    var marginTopFix = 19;
-    var marginLeftFix = 19;
+    var marginTopFix = elementHeight/2<19 ? elementHeight/2 : 19;
+    var marginLeftFix = elementWidth/2<19 ? elementWidth/2 : 19;
     var indicatorMargin = 29;
 
     switch (position) {
@@ -480,10 +489,10 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - elementHeight + presenterPadding);
+                    presenterPosition.top = initialTopPosition - marginTopFix;
                     break;
                 default:
-                    presenterPosition.top = (initialTopPosition);
+                    presenterPosition.top = initialTopPosition;
                     break;
             }
             break;
@@ -493,12 +502,12 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.left = initialLeftPosition + element.outerWidth() - indicatorMargin * 2;
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (elementWidth + difference.width));
+                    presenterPosition.left = (initialLeftPosition - difference.width);
                     break;
             }
             switch (alignVertical) {
                 case "TOP":
-                    presenterPosition.top = (initialTopPosition - (presenter.height() + elementHeight + marginTopFix));
+                    presenterPosition.top = initialTopPosition - presenter.outerHeight() - marginTopFix;
                     break;
                 default:
                     presenterPosition.top = (initialTopPosition + (marginTopFix));
@@ -547,7 +556,7 @@ PresenterJS.prototype.calculateNextPositionForThePresenter = function (position,
                     presenterPosition.left = (initialLeftPosition);
                     break;
                 default:
-                    presenterPosition.left = (initialLeftPosition - (elementWidth + presenterPadding));
+                    presenterPosition.left = initialLeftPosition - presenter.width() + marginLeftFix;
                     break;
             }
             switch (alignVertical) {
